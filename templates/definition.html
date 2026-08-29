@@ -1,0 +1,14 @@
+﻿{% extends "base.html" %}
+{% block title %}What is Machine Learning?{% endblock %}
+{% block content %}
+<main class="page-shell"><div class="orb orb-red page-orb" aria-hidden="true"></div><section class="content-panel definition-panel">
+    <p class="eyebrow"><span></span> Foundations</p><h1>What is <em>Machine Learning?</em></h1><div class="title-line" aria-hidden="true"></div>
+    <p class="lead">Machine Learning is a field of Artificial Intelligence that enables computers to learn from data instead of following a fixed set of instructions for every situation.</p>
+    <div class="insight-grid">
+        <article class="insight-card"><span class="card-number">01</span><h2>AI in practice</h2><p>Machine Learning gives AI systems the ability to recognize patterns, make predictions, and support decisions in real-world tasks.</p></article>
+        <article class="insight-card"><span class="card-number">02</span><h2>Learning from data</h2><p>Models are trained with examples to find relationships between inputs and outcomes, then use what they learned on new information.</p></article>
+        <article class="insight-card"><span class="card-number">03</span><h2>Improving models</h2><p>By evaluating results and refining parameters, a model can improve its performance as it encounters more relevant data.</p></article>
+    </div>
+    <a class="button button-secondary back-button" href="{{ url_for('home') }}"><span>←</span> Back to Home</a>
+</section></main>
+{% endblock %}

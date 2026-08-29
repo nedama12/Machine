@@ -1,0 +1,14 @@
+﻿{% extends "base.html" %}
+{% block title %}Types of Machine Learning{% endblock %}
+{% block content %}
+<main class="page-shell"><div class="orb orb-cyan page-orb" aria-hidden="true"></div><section class="content-panel types-panel">
+    <p class="eyebrow"><span></span> Learning approaches</p><h1>Types of <em>Machine Learning</em></h1><div class="title-line" aria-hidden="true"></div>
+    <p class="lead">The way a model learns depends on the data, feedback, and objective available for the task.</p>
+    <div class="types-grid">
+        <article class="type-card supervised"><div class="type-icon">01</div><h2>Supervised Learning</h2><p>Learns from labeled data, where each training example includes an input and its expected output.</p><div class="examples"><strong>Examples</strong><span>Linear Regression</span><span>Logistic Regression</span><span>Support Vector Machines</span></div></article>
+        <article class="type-card unsupervised"><div class="type-icon">02</div><h2>Unsupervised Learning</h2><p>Finds patterns and structure in data without predefined labels, revealing meaningful groups or relationships.</p><div class="examples"><strong>Example</strong><span>K-Means Clustering</span></div></article>
+        <article class="type-card reinforcement"><div class="type-icon">03</div><h2>Reinforcement Learning</h2><p>An agent learns through interaction with an environment, guided by rewards for effective decisions.</p><div class="examples"><strong>Examples</strong><span>Robotics</span><span>Autonomous Systems</span><span>Game AI</span></div></article>
+    </div>
+    <a class="button button-secondary back-button" href="{{ url_for('home') }}"><span>←</span> Back to Home</a>
+</section></main>
+{% endblock %}

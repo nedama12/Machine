@@ -1,0 +1,21 @@
+﻿{% extends "base.html" %}
+{% block title %}Machine Learning | Home{% endblock %}
+{% block content %}
+<main class="hero-shell">
+    <div class="orb orb-red" aria-hidden="true"></div><div class="orb orb-cyan" aria-hidden="true"></div>
+    <div class="network network-left" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="network network-right" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    <section class="hero" aria-labelledby="hero-title">
+        <p class="eyebrow"><span></span> Artificial Intelligence · Data Systems</p>
+        <h1 id="hero-title">Machine <em>Learning</em></h1><div class="title-line" aria-hidden="true"></div>
+        <p class="hero-subtitle">Teaching Machines to Learn from Data</p>
+        <p class="contributors">Neider Amaya <b>&amp;</b> Nicolas Uchuvó</p>
+        <p class="hero-description">Explore the fundamentals of Machine Learning, understand how machines learn from data, and discover the main approaches used to build intelligent systems.</p>
+        <div class="hero-actions">
+            <a class="button button-primary" href="{{ url_for('definition') }}">What is Machine Learning? <span>→</span></a>
+            <a class="button button-secondary" href="{{ url_for('types') }}">Types of Machine Learning <span>↗</span></a>
+        </div>
+    </section>
+    <div class="scroll-cue" aria-hidden="true"><span></span> Explore the field</div>
+</main>
+{% endblock %}

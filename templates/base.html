@@ -1,0 +1,17 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0A0A0A"><title>{% block title %}Machine Learning{% endblock %}</title><link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"></head>
+<body>
+    <div class="site-grid" aria-hidden="true"></div>
+    <nav class="navbar" aria-label="Main navigation">
+        <a class="brand" href="{{ url_for('home') }}"><span class="brand-mark">ML</span><span>Machine Learning</span></a>
+        <div class="nav-links">
+            <a class="{{ 'active' if request.endpoint == 'home' else '' }}" href="{{ url_for('home') }}">Home</a>
+            <a class="{{ 'active' if request.endpoint == 'definition' else '' }}" href="{{ url_for('definition') }}">Definition</a>
+            <a class="{{ 'active' if request.endpoint == 'types' else '' }}" href="{{ url_for('types') }}">Types</a>
+        </div>
+    </nav>
+    {% block content %}{% endblock %}
+    <footer><span>Machine Learning</span><span class="footer-dot">•</span> A concise introduction to intelligent systems</footer>
+</body>
+</html>
