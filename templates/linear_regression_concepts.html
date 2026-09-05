@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Linear Regression Concepts{% endblock %}
+{% block content %}
+<main class="page-shell linear-page"><section class="content-panel linear-panel">
+<p class="eyebrow"><span></span>Supervised Learning · Linear Regression</p><h1>Linear Regression <em>Concepts</em></h1><div class="title-line"></div>
+<p class="lead">Linear Regression is a supervised learning method that learns a numerical relationship from examples and predicts a continuous value.</p>
+<div class="concept-grid"><article class="detail-card"><h2>What is Linear Regression?</h2><p>It fits a regression line that represents the relationship between an input and an output in the training data.</p></article><article class="detail-card"><h2>Simple Linear Regression</h2><p>It uses one independent variable. This project uses only <strong>Sunlight Hours</strong>; the other columns are complementary information.</p></article><article class="detail-card"><h2>Training Data</h2><p>The 1,096 daily records from Bogota provide pairs of sunlight hours and recorded solar energy production.</p></article></div>
+<section class="equation-card"><div><p class="section-label">Regression Equation</p><p class="equation">y = mx + b</p></div><div class="equation-meaning"><p><strong>x</strong> = Sunlight Hours</p><p><strong>y</strong> = Solar Energy (kWh/day)</p><p><strong>m</strong> = Slope ({{ "%.4f"|format(coefficient) }})</p><p><strong>b</strong> = Intercept ({{ "%.4f"|format(intercept) }})</p></div></section>
+<div class="flow-card"><div><span>Input</span><strong>Sunlight Hours</strong></div><i>&rarr;</i><div><span>Model</span><strong>Linear Regression</strong></div><i>&rarr;</i><div><span>Output</span><strong>Solar Energy Prediction</strong></div></div>
+<div class="two-column-text"><section><h2>How does the line work?</h2><p>The regression line summarizes the relationship between X and Y. Its <strong>slope</strong> estimates how solar energy changes for each additional sunlight hour, while the <strong>intercept</strong> is the prediction when X is zero.</p><p>For example, entering 7 hours makes the trained model use x = 7 to produce a prediction.</p></section><section><h2>Why supervised regression?</h2><p>This is <strong>Supervised Learning</strong> because every record includes an input and a known outcome. It is <strong>Regression</strong>, not Classification, because the result is a continuous value in kWh/day, not a category.</p></section></div>
+<a class="button button-secondary back-button" href="{{ url_for('home') }}"><span>&larr;</span> Back to Home</a>
+</section></main>
+{% endblock %}
