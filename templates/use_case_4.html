@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Use Case 4 | Vehicle Demand Forecasting{% endblock %}
+{% block content %}
+<main class="page-shell"><div class="orb orb-red page-orb" aria-hidden="true"></div><section class="content-panel">
+    <p class="eyebrow"><span></span> Use case 4</p><h1>Vehicle <em>Demand</em> Forecasting</h1><div class="title-line" aria-hidden="true"></div>
+    <p class="lead">This use case relies on <strong>Supervised Learning</strong>, the type of Machine Learning that learns from historical data where the correct answer is already known. The goal is to predict how many vehicles will be needed over the coming days, using historical demand records.</p>
+    <div class="insight-grid">
+        <article class="insight-card"><span class="card-number">Problem</span><h2>What do we need to solve?</h2><p>A transport or vehicle rental company does not know how many vehicles it will need each day. With too few, it loses customers; with too many sitting idle, it spends more than necessary on maintenance.</p></article>
+        <article class="insight-card"><span class="card-number">Data</span><h2>What data would we use?</h2><p>The daily history of vehicles in use, the date, the day of the week, the season of the year (holidays, public holidays), and special events or weather that may affect the number of trips.</p></article>
+        <article class="insight-card"><span class="card-number">Model</span><h2>What would the model do?</h2><p>From the historical records, the model learns how demand varies with the date and other conditions. Then, given a future date, it computes a number: the quantity of vehicles that will be needed that day.</p></article>
+        <article class="insight-card"><span class="card-number">ML Type</span><h2>Supervised Learning — Regression</h2><p>It is supervised because we use historical data where the real number of vehicles used each day is already known. It is regression because the result we want is a number. A simple algorithm example: Linear Regression.</p></article>
+        <article class="insight-card"><span class="card-number">Benefit</span><h2>What is this useful for?</h2><p>It helps keep exactly the right number of vehicles available, cuts unnecessary maintenance costs, and improves customer satisfaction by never leaving them without service.</p></article>
+    </div>
+    <div class="hero-actions page-actions">
+        <a class="button button-secondary" href="{{ url_for('use_case_3') }}">See Use Case 3 <span>→</span></a>
+        <a class="button button-secondary back-button" href="{{ url_for('home') }}"><span>←</span> Back to Home</a>
+    </div>
+</section></main>
+{% endblock %}

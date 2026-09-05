@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Use Case 3 | Customer Segmentation{% endblock %}
+{% block content %}
+<main class="page-shell"><div class="orb orb-cyan page-orb" aria-hidden="true"></div><section class="content-panel">
+    <p class="eyebrow"><span></span> Use case 3</p><h1>Customer <em>Segmentation</em></h1><div class="title-line" aria-hidden="true"></div>
+    <p class="lead">This use case relies on <strong>Unsupervised Learning</strong>, the type of Machine Learning used to uncover hidden groups inside a dataset. The goal is to group a company's customers by their characteristics and buying behavior, without telling the model beforehand which groups are the correct ones.</p>
+    <div class="insight-grid">
+        <article class="insight-card"><span class="card-number">Problem</span><h2>What do we need to solve?</h2><p>A company has many different customers and sends the same advertising to all of them. That is not effective, because not every customer buys the same way or looks for the same things. They need to be grouped to be understood better.</p></article>
+        <article class="insight-card"><span class="card-number">Data</span><h2>What data would we use?</h2><p>Customer data such as age, purchase frequency, total amount spent, preferred product categories, and payment method. This data has no label or known correct answer beforehand.</p></article>
+        <article class="insight-card"><span class="card-number">Model</span><h2>What would the model do?</h2><p>The model analyzes the characteristics of every customer and looks for similarities among them. Based on that, it builds groups (clusters) of similar customers, for example: "frequent low-spend buyers" or "occasional high-spend buyers".</p></article>
+        <article class="insight-card"><span class="card-number">ML Type</span><h2>Unsupervised Learning — Clustering</h2><p>It is unsupervised because the data has no previous correct answer: nobody tells the model which group each customer belongs to. The model discovers them on its own. A simple algorithm example: K-Means.</p></article>
+        <article class="insight-card"><span class="card-number">Benefit</span><h2>What is this useful for?</h2><p>It makes it possible to design promotions and marketing messages tailored to each customer group, improves the relationship with them, and increases the chance of a sale by offering exactly what each group is looking for.</p></article>
+    </div>
+    <div class="hero-actions page-actions">
+        <a class="button button-secondary" href="{{ url_for('use_case_4') }}">See Use Case 4 <span>→</span></a>
+        <a class="button button-secondary back-button" href="{{ url_for('home') }}"><span>←</span> Back to Home</a>
+    </div>
+</section></main>
+{% endblock %}
