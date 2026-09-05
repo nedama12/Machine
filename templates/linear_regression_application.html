@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Solar Energy Application{% endblock %}
+{% block content %}
+<main class="page-shell linear-page"><section class="content-panel linear-panel">
+    <p class="eyebrow"><span></span>Supervised Learning · Application</p>
+    <h1>Solar Energy <em>Prediction</em></h1><div class="title-line"></div>
+    <p class="lead">Estimate daily solar energy production in Bogota, Colombia using daily sunlight hours and Simple Linear Regression.</p>
+    <div class="application-grid">
+        <section class="prediction-card prediction-priority"><p class="section-label">Model Calculator</p><h2>Make a Prediction</h2><p class="prediction-help">Enter the sunlight hours to estimate the solar energy produced.</p>
+            <form method="post" novalidate><label for="hours">Sunlight Hours</label><div class="input-row"><input id="hours" name="hours" type="number" min="4" max="8" step="0.1" placeholder="Example: 7.0" value="{{ hours }}" required><span>hours</span></div><button class="button button-primary" type="submit">Predict Solar Energy <span>&rarr;</span></button></form>
+            {% if error %}<p class="form-error" role="alert">{{ error }}</p>{% endif %}
+            {% if prediction is not none %}<div class="result-card" aria-live="polite"><span>Prediction Result</span><strong>{{ "%.2f"|format(prediction) }} <small>kWh/day</small></strong><p>Estimated daily solar energy for {{ hours }} sunlight hours.</p></div>{% else %}<div class="result-card result-placeholder"><span>Your result will appear here</span><strong>-- <small>kWh/day</small></strong></div>{% endif %}
+        </section>
+        <section class="detail-card context-card"><p class="section-label">Problem Context</p><h2>From Sunlight to Energy</h2><p>The goal is to predict solar energy production from sunlight hours. The model was trained with daily data from Bogota, Colombia.</p><div class="variable-list"><div><span>Independent Variable (X)</span><strong>Sunlight Hours <small>hours</small></strong></div><div><span>Dependent Variable (Y)</span><strong>Solar Energy <small>kWh/day</small></strong></div></div><p>Both are quantitative numerical variables. Simple Linear Regression uses only these two variables.</p></section>
+    </div>
+    <section class="dataset-section"><p class="section-label">Dataset</p><div class="dataset-head"><h2>solar_energy_colombia.csv</h2><p>{{ "{:,}".format(record_count) }} daily records · Bogota, Colombia · 2020-2022 · NASA POWER</p></div><div class="dataset-tags"><span>Date</span><span>Solar Irradiance</span><span>Temperature</span><span>Humidity</span><span>Wind Speed</span><span>Precipitation</span><span>Sunlight Hours</span><span>Solar Energy</span></div></section>
+    <section class="graph-section"><p class="section-label">Regression Graph</p><h2>Real Data and Regression Line</h2><img src="{{ url_for('static', filename='regression_graph.png') }}" alt="Scatter plot with solar energy data and regression line" class="regression-graph"></section>
+    <section class="model-section"><p class="section-label">Model Information</p><div class="model-grid"><div><span>Number of Records</span><strong>{{ "{:,}".format(record_count) }}</strong></div><div><span>Independent Variable</span><strong>Sunlight Hours</strong></div><div><span>Dependent Variable</span><strong>Solar Energy</strong></div><div><span>Slope / Coefficient</span><strong>{{ "%.4f"|format(coefficient) }}</strong></div><div><span>Intercept</span><strong>{{ "%.4f"|format(intercept) }}</strong></div><div><span>Example: 7 Hours</span><strong>{{ "%.2f"|format(example_prediction) }} kWh/day</strong></div></div><p class="interpretation">For each additional sunlight hour, the model estimates an increase of approximately <strong>{{ "%.2f"|format(coefficient) }} kWh/day</strong> in solar energy production.</p></section>
+    <a class="button button-secondary back-button" href="{{ url_for('home') }}"><span>&larr;</span> Back to Home</a>
+</section></main>
+{% endblock %}
