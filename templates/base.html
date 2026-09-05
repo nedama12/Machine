@@ -29,7 +29,9 @@
             <span>Solar ML Project</span>
         </a>
 
-        <div class="nav-links">
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle navigation menu"><span></span><span></span><span></span></button>
+
+        <div class="nav-links" id="nav-links">
 
             <!-- Home -->
             <a
@@ -90,6 +92,17 @@
 
             </div>
 
+            <!-- Use Cases -->
+            <div class="nav-dropdown {{ 'active' if request.endpoint in ('use_case_1','use_case_2','use_case_3','use_case_4') else '' }}">
+                <button class="nav-dropdown-trigger" type="button" aria-haspopup="true" aria-expanded="false">Use Cases <span class="caret">▾</span></button>
+                <div class="nav-dropdown-menu">
+                    <a class="nav-dropdown-item disabled" aria-disabled="true" tabindex="-1">Use Case 1 <span class="soon">Coming soon</span></a>
+                    <a class="nav-dropdown-item disabled" aria-disabled="true" tabindex="-1">Use Case 2 <span class="soon">Coming soon</span></a>
+                    <a class="nav-dropdown-item {{ 'active' if request.endpoint == 'use_case_3' else '' }}" href="{{ url_for('use_case_3') }}">Use Case 3 — Customer Segmentation</a>
+                    <a class="nav-dropdown-item {{ 'active' if request.endpoint == 'use_case_4' else '' }}" href="{{ url_for('use_case_4') }}">Use Case 4 — Vehicle Demand Forecasting</a>
+                </div>
+            </div>
+
         </div>
 
     </nav>
@@ -104,5 +117,32 @@
         <span>Learn from real environmental data</span>
     </footer>
 
+    <script>
+        (function () {
+            var toggle = document.querySelector('.nav-toggle');
+            var links = document.getElementById('nav-links');
+            if (toggle && links) {
+                toggle.addEventListener('click', function () {
+                    var open = links.classList.toggle('open');
+                    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+                });
+            }
+            var dropdown = document.querySelector('.nav-dropdown');
+            var trigger = document.querySelector('.nav-dropdown-trigger');
+            if (dropdown && trigger) {
+                trigger.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    var open = dropdown.classList.toggle('open');
+                    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+                });
+                document.addEventListener('click', function (e) {
+                    if (!dropdown.contains(e.target)) {
+                        dropdown.classList.remove('open');
+                        trigger.setAttribute('aria-expanded', 'false');
+                    }
+                });
+            }
+        })();
+    </script>
 </body>
 </html>
