@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Use Case 1 | House Price Prediction{% endblock %}
+{% block content %}
+<main class="page-shell"><div class="orb orb-red page-orb" aria-hidden="true"></div><section class="content-panel">
+    <p class="eyebrow"><span></span> Use case 1</p><h1>House <em>Price</em> Prediction</h1><div class="title-line" aria-hidden="true"></div>
+    <p class="lead">This use case relies on <strong>Supervised Learning</strong>, the type of Machine Learning that learns from historical data where the correct answer is already known. The goal is to predict a house's price from its characteristics, using examples of homes that were already sold before.</p>
+    <div class="insight-grid">
+        <article class="insight-card"><span class="card-number">Problem</span><h2>What do we need to solve?</h2><p>A real-estate agency wants to know at what price to list a home, but calculating it by hand for every case is slow and inconsistent. A method is needed to estimate the price faster and more objectively.</p></article>
+        <article class="insight-card"><span class="card-number">Data</span><h2>What data would we use?</h2><p>Data from homes already sold: area in square meters, number of bedrooms and bathrooms, location, age, and the final price each one sold for.</p></article>
+        <article class="insight-card"><span class="card-number">Model</span><h2>What would the model do?</h2><p>From the homes already sold, the model learns how those characteristics relate to the final price. Then, given the data of a new home, it computes an estimated price.</p></article>
+        <article class="insight-card"><span class="card-number">ML Type</span><h2>Supervised Learning — Regression</h2><p>It is supervised because we use data where the real price of each home is already known. It is regression because the result we want is a number. A simple algorithm example: Linear Regression.</p></article>
+        <article class="insight-card"><span class="card-number">Benefit</span><h2>What is this useful for?</h2><p>It helps set fairer, more consistent prices, reduces the time spent analyzing each property, and gives more confidence to both buyers and sellers.</p></article>
+    </div>
+    <div class="hero-actions page-actions">
+        <a class="button button-secondary" href="{{ url_for('use_case_2') }}">See Use Case 2 <span>→</span></a>
+        <a class="button button-secondary back-button" href="{{ url_for('home') }}"><span>←</span> Back to Home</a>
+    </div>
+</section></main>
+{% endblock %}

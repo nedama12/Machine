@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Use Case 2 | Email Spam Detection{% endblock %}
+{% block content %}
+<main class="page-shell"><div class="orb orb-cyan page-orb" aria-hidden="true"></div><section class="content-panel">
+    <p class="eyebrow"><span></span> Use case 2</p><h1>Email <em>Spam</em> Detection</h1><div class="title-line" aria-hidden="true"></div>
+    <p class="lead">This use case relies on <strong>Supervised Learning</strong>, the type of Machine Learning that learns from historical data where the correct answer is already known. The goal is to have the model review an email and say whether it is spam or not, using previous emails that were already labeled.</p>
+    <div class="insight-grid">
+        <article class="insight-card"><span class="card-number">Problem</span><h2>What do we need to solve?</h2><p>Email users receive unwanted messages that fill up the inbox and can be dangerous (phishing, misleading ads). Reviewing every email by hand is slow and impractical.</p></article>
+        <article class="insight-card"><span class="card-number">Data</span><h2>What data would we use?</h2><p>A set of previous emails already labeled as "spam" or "not spam", along with their content: subject, message body, sender, and whether they contain links or attachments.</p></article>
+        <article class="insight-card"><span class="card-number">Model</span><h2>What would the model do?</h2><p>From the emails already labeled, the model learns which words and patterns tend to appear in spam messages. With that, when a new email arrives, it decides which category it belongs to.</p></article>
+        <article class="insight-card"><span class="card-number">ML Type</span><h2>Supervised Learning — Classification</h2><p>It is supervised because we use emails where it is already known whether they are spam or not. It is classification because the result we want is a category. A simple algorithm example: Naive Bayes.</p></article>
+        <article class="insight-card"><span class="card-number">Benefit</span><h2>What is this useful for?</h2><p>It keeps the inbox cleaner, reduces the risk of falling for fraud or dangerous links, and saves users time by not having to review unnecessary emails.</p></article>
+    </div>
+    <div class="hero-actions page-actions">
+        <a class="button button-secondary" href="{{ url_for('use_case_3') }}">See Use Case 3 <span>→</span></a>
+        <a class="button button-secondary back-button" href="{{ url_for('home') }}"><span>←</span> Back to Home</a>
+    </div>
+</section></main>
+{% endblock %}

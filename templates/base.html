@@ -96,8 +96,8 @@
             <div class="nav-dropdown {{ 'active' if request.endpoint in ('use_case_1','use_case_2','use_case_3','use_case_4') else '' }}">
                 <button class="nav-dropdown-trigger" type="button" aria-haspopup="true" aria-expanded="false">Use Cases <span class="caret">▾</span></button>
                 <div class="nav-dropdown-menu">
-                    <a class="nav-dropdown-item disabled" aria-disabled="true" tabindex="-1">Use Case 1 <span class="soon">Coming soon</span></a>
-                    <a class="nav-dropdown-item disabled" aria-disabled="true" tabindex="-1">Use Case 2 <span class="soon">Coming soon</span></a>
+                    <a class="nav-dropdown-item {{ 'active' if request.endpoint == 'use_case_1' else '' }}" href="{{ url_for('use_case_1') }}">Use Case 1 — House Price Prediction</a>
+                    <a class="nav-dropdown-item {{ 'active' if request.endpoint == 'use_case_2' else '' }}" href="{{ url_for('use_case_2') }}">Use Case 2 — Email Spam Detection</a>
                     <a class="nav-dropdown-item {{ 'active' if request.endpoint == 'use_case_3' else '' }}" href="{{ url_for('use_case_3') }}">Use Case 3 — Customer Segmentation</a>
                     <a class="nav-dropdown-item {{ 'active' if request.endpoint == 'use_case_4' else '' }}" href="{{ url_for('use_case_4') }}">Use Case 4 — Vehicle Demand Forecasting</a>
                 </div>
