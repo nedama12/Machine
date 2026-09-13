@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% block title %}Extra Trees Classifier | Concepts{% endblock %}
+
+{% block content %}
+
+<main class="page-shell">
+
+    <section class="content-panel">
+
+        <p class="eyebrow">
+            <span></span>
+            Supervised Learning
+        </p>
+
+        <h1>
+            Extra Trees <em>Classifier</em>
+        </h1>
+
+        <div class="title-line"></div>
+
+        <p class="lead">
+            Extra Trees Classifier is a supervised machine learning
+            algorithm based on an ensemble of randomized decision trees.
+            It is used to classify observations into different categories.
+        </p>
+
+        <div class="insight-grid">
+
+            <div class="insight-card">
+                <span class="card-number">01</span>
+                <h2>Definition</h2>
+                <p>
+                    Extra Trees creates multiple decision trees and combines
+                    their predictions to obtain a final classification.
+                </p>
+            </div>
+
+            <div class="insight-card">
+                <span class="card-number">02</span>
+                <h2>How It Works</h2>
+                <p>
+                    The algorithm introduces randomization when creating
+                    decision trees and combines their results.
+                </p>
+            </div>
+
+            <div class="insight-card">
+                <span class="card-number">03</span>
+                <h2>Classification</h2>
+                <p>
+                    It can be used for classification problems with two
+                    or more classes.
+                </p>
+            </div>
+
+        </div>
+
+        <div class="mt-5">
+
+            <h2>Characteristics</h2>
+
+            <div class="insight-grid">
+
+                <div class="insight-card">
+                    <span class="card-number">TREES</span>
+                    <h2>Multiple Trees</h2>
+                    <p>
+                        The model uses an ensemble of decision trees to
+                        make its predictions.
+                    </p>
+                </div>
+
+                <div class="insight-card">
+                    <span class="card-number">RANDOM</span>
+                    <h2>Randomization</h2>
+                    <p>
+                        Random selection is used when creating the
+                        decision trees.
+                    </p>
+                </div>
+
+                <div class="insight-card">
+                    <span class="card-number">DATA</span>
+                    <h2>Multiple Variables</h2>
+                    <p>
+                        The model can work with several independent
+                        variables at the same time.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="mt-5">
+
+            <h2>Advantages and Limitations</h2>
+
+            <div class="insight-grid">
+
+                <div class="insight-card">
+                    <span class="card-number">ADVANTAGES</span>
+                    <h2>Strengths</h2>
+                    <p>
+                        It can handle several variables, capture complex
+                        relationships and reduce dependence on a single
+                        decision tree.
+                    </p>
+                </div>
+
+                <div class="insight-card">
+                    <span class="card-number">LIMITATIONS</span>
+                    <h2>Considerations</h2>
+                    <p>
+                        The model can require more computational resources
+                        because it uses many decision trees.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="mt-5">
+
+            <h2>Real-World Example</h2>
+
+            <p class="lead">
+                Extra Trees can be used in credit risk analysis to classify
+                customers according to financial characteristics such as
+                income, debt, credit score and age.
+            </p>
+
+            <div class="insight-card mt-4">
+
+                <span class="card-number">OUR PROJECT</span>
+
+                <h2>Credit Risk Classification</h2>
+
+                <p>
+                    In this project, the model uses four independent
+                    variables to classify an application as low risk
+                    or high risk.
+                </p>
+
+                <p>
+                    0 = Low Risk<br>
+                    1 = High Risk
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+{% endblock %}

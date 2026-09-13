@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block title %}Logistic Regression | Application{% endblock %}
+
+{% block content %}
+
+<main class="page-shell">
+
+    <section class="content-panel">
+
+        <p class="eyebrow">
+            <span></span>
+            Logistic Regression
+        </p>
+
+        <h1>
+            Credit <em>Approval</em>
+        </h1>
+
+        <div class="title-line"></div>
+
+        <p class="lead">
+            This application uses Logistic Regression to predict whether
+            a credit application will be approved or rejected based on
+            the applicant's monthly income.
+        </p>
+
+        <div class="insight-grid">
+
+            <div class="insight-card">
+                <span class="card-number">DATASET</span>
+                <h2>Credit Approval</h2>
+                <p>
+                    The dataset contains {{ record_count }} records
+                    generated for academic purposes.
+                </p>
+            </div>
+
+            <div class="insight-card">
+                <span class="card-number">VARIABLE</span>
+                <h2>Monthly Income</h2>
+                <p>
+                    The independent variable is the applicant's
+                    monthly income in Colombian pesos.
+                </p>
+            </div>
+
+            <div class="insight-card">
+                <span class="card-number">CLASSES</span>
+                <h2>Binary Classification</h2>
+                <p>
+                    0 = Credit Rejected<br>
+                    1 = Credit Approved
+                </p>
+            </div>
+
+        </div>
+
+        <div class="mt-5">
+
+            <h2>Credit Approval Prediction</h2>
+
+            <p class="lead">
+                Enter the applicant's monthly income to obtain a
+                classification from the trained model.
+            </p>
+
+            <form method="POST" class="mt-4">
+
+                <div class="mb-3">
+
+                    <label for="income" class="form-label">
+                        Monthly Income (COP)
+                    </label>
+
+                    <input
+                        type="number"
+                        class="form-control"
+                        id="income"
+                        name="income"
+                        placeholder="Example: 3000000"
+                        min="1300000"
+                        max="6000000"
+                        step="1000"
+                        value="{{ income }}"
+                        required
+                    >
+
+                </div>
+
+                <button type="submit" class="button button-primary">
+                    Predict Credit <span>&rarr;</span>
+                </button>
+
+            </form>
+
+            {% if error %}
+
+            <div class="alert alert-danger mt-4">
+                {{ error }}
+            </div>
+
+            {% endif %}
+
+            {% if prediction is not none %}
+
+            <div class="insight-card mt-4">
+
+                <span class="card-number">RESULT</span>
+
+                {% if prediction == 1 %}
+
+                <h2>Credit Approved</h2>
+
+                <p>
+                    The model predicts that the credit application
+                    belongs to class 1: Approved.
+                </p>
+
+                {% else %}
+
+                <h2>Credit Rejected</h2>
+
+                <p>
+                    The model predicts that the credit application
+                    belongs to class 0: Rejected.
+                </p>
+
+                {% endif %}
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+        <div class="mt-5">
+
+            <h2>Dataset Visualization</h2>
+
+            <img
+                src="{{ url_for('static', filename='credit_approval_graph.png') }}"
+                alt="Credit approval graph"
+                class="img-fluid mt-3"
+            >
+
+        </div>
+
+    </section>
+
+</main>
+
+{% endblock %}
