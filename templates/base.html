@@ -29,11 +29,20 @@
             <span>Solar ML Project</span>
         </a>
 
-        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-links" aria-label="Toggle navigation menu"><span></span><span></span><span></span></button>
+        <button
+            class="nav-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="nav-links"
+            aria-label="Toggle navigation menu"
+        >
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
 
         <div class="nav-links" id="nav-links">
 
-            <!-- Home -->
             <a
                 class="{{ 'active' if request.endpoint == 'home' else '' }}"
                 href="{{ url_for('home') }}"
@@ -41,7 +50,6 @@
                 Home
             </a>
 
-            <!-- Machine Learning Concepts -->
             <a
                 class="{{ 'active' if request.endpoint == 'definition' else '' }}"
                 href="{{ url_for('definition') }}"
@@ -49,7 +57,6 @@
                 Concepts
             </a>
 
-            <!-- Types of Machine Learning -->
             <a
                 class="{{ 'active' if request.endpoint == 'types' else '' }}"
                 href="{{ url_for('types') }}"
@@ -57,9 +64,17 @@
                 Types
             </a>
 
-            <!-- Supervised Learning -->
             <div
-                class="nav-group {{ 'active-group' if request.endpoint in ['linear_regression_concepts', 'linear_regression_application'] else '' }}"
+                class="nav-group {{ 'active-group' if request.endpoint in [
+                    'linear_regression_concepts',
+                    'linear_regression_application',
+                    'logistic_regression_concepts',
+                    'logistic_regression_application',
+                    'logistic_regression_metrics',
+                    'extra_trees_concepts',
+                    'extra_trees_application',
+                    'extra_trees_metrics'
+                ] else '' }}"
             >
 
                 <button
@@ -88,61 +103,186 @@
                         Application
                     </a>
 
+                    <span>Logistic Regression</span>
+
+                    <a
+                        class="{{ 'active' if request.endpoint == 'logistic_regression_concepts' else '' }}"
+                        href="{{ url_for('logistic_regression_concepts') }}"
+                    >
+                        Concepts
+                    </a>
+
+                    <a
+                        class="{{ 'active' if request.endpoint == 'logistic_regression_application' else '' }}"
+                        href="{{ url_for('logistic_regression_application') }}"
+                    >
+                        Application
+                    </a>
+
+                    <a
+                        class="{{ 'active' if request.endpoint == 'logistic_regression_metrics' else '' }}"
+                        href="{{ url_for('logistic_regression_metrics') }}"
+                    >
+                        Evaluation Metrics
+                    </a>
+
+                    <span>Extra Trees Classifier</span>
+
+                    <a
+                        class="{{ 'active' if request.endpoint == 'extra_trees_concepts' else '' }}"
+                        href="{{ url_for('extra_trees_concepts') }}"
+                    >
+                        Concepts
+                    </a>
+
+                    <a
+                        class="{{ 'active' if request.endpoint == 'extra_trees_application' else '' }}"
+                        href="{{ url_for('extra_trees_application') }}"
+                    >
+                        Application
+                    </a>
+
+                    <a
+                        class="{{ 'active' if request.endpoint == 'extra_trees_metrics' else '' }}"
+                        href="{{ url_for('extra_trees_metrics') }}"
+                    >
+                        Evaluation Metrics
+                    </a>
+
                 </div>
 
             </div>
 
-            <!-- Use Cases -->
-            <div class="nav-dropdown {{ 'active' if request.endpoint in ('use_case_1','use_case_2','use_case_3','use_case_4') else '' }}">
-                <button class="nav-dropdown-trigger" type="button" aria-haspopup="true" aria-expanded="false">Use Cases <span class="caret">▾</span></button>
+            <div
+                class="nav-dropdown {{ 'active' if request.endpoint in (
+                    'use_case_1',
+                    'use_case_2',
+                    'use_case_3',
+                    'use_case_4'
+                ) else '' }}"
+            >
+
+                <button
+                    class="nav-dropdown-trigger"
+                    type="button"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                >
+                    Use Cases
+                    <span class="caret">▾</span>
+                </button>
+
                 <div class="nav-dropdown-menu">
-                    <a class="nav-dropdown-item {{ 'active' if request.endpoint == 'use_case_1' else '' }}" href="{{ url_for('use_case_1') }}">Use Case 1 — House Price Prediction</a>
-                    <a class="nav-dropdown-item {{ 'active' if request.endpoint == 'use_case_2' else '' }}" href="{{ url_for('use_case_2') }}">Use Case 2 — Email Spam Detection</a>
-                    <a class="nav-dropdown-item {{ 'active' if request.endpoint == 'use_case_3' else '' }}" href="{{ url_for('use_case_3') }}">Use Case 3 — Customer Segmentation</a>
-                    <a class="nav-dropdown-item {{ 'active' if request.endpoint == 'use_case_4' else '' }}" href="{{ url_for('use_case_4') }}">Use Case 4 — Vehicle Demand Forecasting</a>
+
+                    <a
+                        class="nav-dropdown-item {{ 'active' if request.endpoint == 'use_case_1' else '' }}"
+                        href="{{ url_for('use_case_1') }}"
+                    >
+                        Use Case 1 — House Price Prediction
+                    </a>
+
+                    <a
+                        class="nav-dropdown-item {{ 'active' if request.endpoint == 'use_case_2' else '' }}"
+                        href="{{ url_for('use_case_2') }}"
+                    >
+                        Use Case 2 — Email Spam Detection
+                    </a>
+
+                    <a
+                        class="nav-dropdown-item {{ 'active' if request.endpoint == 'use_case_3' else '' }}"
+                        href="{{ url_for('use_case_3') }}"
+                    >
+                        Use Case 3 — Customer Segmentation
+                    </a>
+
+                    <a
+                        class="nav-dropdown-item {{ 'active' if request.endpoint == 'use_case_4' else '' }}"
+                        href="{{ url_for('use_case_4') }}"
+                    >
+                        Use Case 4 — Vehicle Demand Forecasting
+                    </a>
+
                 </div>
+
             </div>
 
         </div>
 
     </nav>
 
-    <!-- Page content -->
     {% block content %}
     {% endblock %}
 
     <footer>
+
         <span>Solar Energy Machine Learning</span>
+
         <span class="footer-dot">&bull;</span>
+
         <span>Learn from real environmental data</span>
+
     </footer>
 
     <script>
+
         (function () {
+
             var toggle = document.querySelector('.nav-toggle');
             var links = document.getElementById('nav-links');
+
             if (toggle && links) {
+
                 toggle.addEventListener('click', function () {
+
                     var open = links.classList.toggle('open');
-                    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+
+                    toggle.setAttribute(
+                        'aria-expanded',
+                        open ? 'true' : 'false'
+                    );
+
                 });
+
             }
+
             var dropdown = document.querySelector('.nav-dropdown');
             var trigger = document.querySelector('.nav-dropdown-trigger');
+
             if (dropdown && trigger) {
+
                 trigger.addEventListener('click', function (e) {
+
                     e.stopPropagation();
+
                     var open = dropdown.classList.toggle('open');
-                    trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+
+                    trigger.setAttribute(
+                        'aria-expanded',
+                        open ? 'true' : 'false'
+                    );
+
                 });
+
                 document.addEventListener('click', function (e) {
+
                     if (!dropdown.contains(e.target)) {
+
                         dropdown.classList.remove('open');
-                        trigger.setAttribute('aria-expanded', 'false');
+
+                        trigger.setAttribute(
+                            'aria-expanded',
+                            'false'
+                        );
+
                     }
+
                 });
+
             }
+
         })();
+
     </script>
+
 </body>
 </html>
