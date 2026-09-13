@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request
 
 from LinearRegressionGrades import df, model, predict_energy
-from logistic_regression import predict_credit
+from logistic_regression import df as credit_df, predict_credit
 from extra_trees import process_risk_prediction, df as risk_df
 from logistic_regression_metrics import (
     matrix,
@@ -127,7 +127,8 @@ def logistic_regression_application():
         "logistic_regression_application.html",
         prediction=prediction,
         error=error,
-        income=income
+        income=income,
+        record_count=len(credit_df)
     )
 
 @app.route("/logistic-regression/metrics")
