@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+
+{% block title %}Extra Trees Classifier | Application{% endblock %}
+
+{% block content %}
+
+<main class="page-shell">
+
+    <section class="content-panel">
+
+        <p class="eyebrow">
+            <span></span>
+            Extra Trees Classifier
+        </p>
+
+        <h1>
+            Credit Risk <em>Classification</em>
+        </h1>
+
+        <div class="title-line"></div>
+
+        <p class="lead">
+            This application uses an Extra Trees Classifier to predict
+            whether a credit application represents low or high risk
+            using four independent variables.
+        </p>
+
+        <div class="insight-grid">
+
+            <div class="insight-card">
+                <span class="card-number">DATASET</span>
+                <h2>Credit Risk</h2>
+                <p>
+                    The dataset contains {{ record_count }} records
+                    generated for academic purposes.
+                </p>
+            </div>
+
+            <div class="insight-card">
+                <span class="card-number">VARIABLES</span>
+                <h2>4 Inputs</h2>
+                <p>
+                    Monthly Income, Monthly Debt, Credit Score and Age.
+                </p>
+            </div>
+
+            <div class="insight-card">
+                <span class="card-number">CLASSES</span>
+                <h2>Binary Classification</h2>
+                <p>
+                    0 = Low Risk<br>
+                    1 = High Risk
+                </p>
+            </div>
+
+        </div>
+
+        <div class="mt-5">
+
+            <h2>Credit Risk Prediction</h2>
+
+            <p class="lead">
+                Enter the applicant's information to obtain a risk
+                classification from the trained model.
+            </p>
+
+            <form method="POST" class="mt-4">
+
+                <div class="mb-3">
+
+                    <label for="monthly_income" class="form-label">
+                        Monthly Income (COP)
+                    </label>
+
+                    <input
+                        type="number"
+                        class="form-control"
+                        id="monthly_income"
+                        name="monthly_income"
+                        placeholder="Example: 3000000"
+                        min="1300000"
+                        max="6000000"
+                        step="1000"
+                        value="{{ monthly_income }}"
+                        required
+                    >
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label for="monthly_debt" class="form-label">
+                        Monthly Debt (COP)
+                    </label>
+
+                    <input
+                        type="number"
+                        class="form-control"
+                        id="monthly_debt"
+                        name="monthly_debt"
+                        placeholder="Example: 800000"
+                        min="200000"
+                        value="{{ monthly_debt }}"
+                        required
+                    >
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label for="credit_score" class="form-label">
+                        Credit Score
+                    </label>
+
+                    <input
+                        type="number"
+                        class="form-control"
+                        id="credit_score"
+                        name="credit_score"
+                        placeholder="Example: 700"
+                        min="300"
+                        max="850"
+                        value="{{ credit_score }}"
+                        required
+                    >
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label for="age" class="form-label">
+                        Age
+                    </label>
+
+                    <input
+                        type="number"
+                        class="form-control"
+                        id="age"
+                        name="age"
+                        placeholder="Example: 30"
+                        min="18"
+                        max="70"
+                        value="{{ age }}"
+                        required
+                    >
+
+                </div>
+
+                <button type="submit" class="button button-primary">
+                    Predict Risk <span>&rarr;</span>
+                </button>
+
+            </form>
+
+            {% if error %}
+
+            <div class="alert alert-danger mt-4">
+                {{ error }}
+            </div>
+
+            {% endif %}
+
+            {% if prediction is not none %}
+
+            <div class="insight-card mt-4">
+
+                <span class="card-number">RESULT</span>
+
+                {% if prediction == 1 %}
+
+                <h2>High Risk</h2>
+
+                <p>
+                    The model predicts that the credit application
+                    belongs to class 1: High Risk.
+                </p>
+
+                {% else %}
+
+                <h2>Low Risk</h2>
+
+                <p>
+                    The model predicts that the credit application
+                    belongs to class 0: Low Risk.
+                </p>
+
+                {% endif %}
+
+            </div>
+
+            {% endif %}
+
+        </div>
+
+        <div class="mt-5">
+
+            <h2>Classification Visualization</h2>
+
+            <img
+                src="{{ url_for('static', filename='credit_risk_graph.png') }}"
+                alt="Credit risk classification graph"
+                class="img-fluid mt-3"
+            >
+
+        </div>
+
+    </section>
+
+</main>
+
+{% endblock %}

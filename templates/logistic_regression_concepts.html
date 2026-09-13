@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+
+{% block title %}Logistic Regression | Concepts{% endblock %}
+
+{% block content %}
+
+<main class="page-shell">
+
+    <section class="content-panel">
+
+        <p class="eyebrow">
+            <span></span>
+            Supervised Learning
+        </p>
+
+        <h1>
+            Logistic <em>Regression</em>
+        </h1>
+
+        <div class="title-line"></div>
+
+        <p class="lead">
+            Logistic Regression is a supervised learning algorithm used
+            to classify data into categories based on one or more
+            independent variables.
+        </p>
+
+        <div class="insight-grid">
+
+            <div class="insight-card">
+                <span class="card-number">01</span>
+                <h2>Classification</h2>
+                <p>
+                    Classification assigns data to predefined classes
+                    according to the characteristics of each observation.
+                </p>
+            </div>
+
+            <div class="insight-card">
+                <span class="card-number">02</span>
+                <h2>Binary Classification</h2>
+                <p>
+                    Binary classification uses two possible classes.
+                    In this project, the classes are rejected and approved.
+                </p>
+            </div>
+
+            <div class="insight-card">
+                <span class="card-number">03</span>
+                <h2>Probability</h2>
+                <p>
+                    The model estimates the probability that an observation
+                    belongs to a specific class.
+                </p>
+            </div>
+
+        </div>
+
+        <div class="mt-5">
+
+            <h2>Variables and Labels</h2>
+
+            <p class="lead">
+                The independent variable is the information used by the
+                model to make the prediction. The dependent variable is
+                the result that the model tries to predict.
+            </p>
+
+            <div class="insight-grid">
+
+                <div class="insight-card">
+                    <span class="card-number">INPUT</span>
+                    <h2>Monthly Income</h2>
+                    <p>
+                        Independent variable: the applicant's monthly
+                        income in Colombian pesos.
+                    </p>
+                </div>
+
+                <div class="insight-card">
+                    <span class="card-number">TARGET</span>
+                    <h2>Credit Approval</h2>
+                    <p>
+                        Dependent variable and target label used for
+                        classification.
+                    </p>
+                </div>
+
+                <div class="insight-card">
+                    <span class="card-number">LABELS</span>
+                    <h2>0 and 1</h2>
+                    <p>
+                        0 = Credit Rejected<br>
+                        1 = Credit Approved
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="mt-5">
+
+            <h2>Classification Threshold</h2>
+
+            <p class="lead">
+                Logistic Regression produces a probability between 0 and 1.
+                A threshold is used to transform that probability into
+                a class prediction.
+            </p>
+
+            <div class="insight-card mt-4">
+
+                <span class="card-number">THRESHOLD</span>
+
+                <h2>0.5</h2>
+
+                <p>
+                    When the estimated probability is at least 0.5,
+                    the observation is classified as class 1.
+                    Otherwise, it is classified as class 0.
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="mt-5">
+
+            <h2>Logistic Regression vs Linear Regression</h2>
+
+            <div class="table-responsive mt-4">
+
+                <table class="table table-dark table-bordered">
+
+                    <thead>
+                        <tr>
+                            <th>Linear Regression</th>
+                            <th>Logistic Regression</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <td>Predicts continuous values.</td>
+                            <td>Predicts categories.</td>
+                        </tr>
+
+                        <tr>
+                            <td>Used for regression problems.</td>
+                            <td>Used for classification problems.</td>
+                        </tr>
+
+                        <tr>
+                            <td>Output can take many numerical values.</td>
+                            <td>Output represents class probabilities and labels.</td>
+                        </tr>
+
+                        <tr>
+                            <td>Example: solar energy production.</td>
+                            <td>Example: credit approval.</td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+{% endblock %}

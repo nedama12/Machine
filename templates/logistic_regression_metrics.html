@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+
+{% block title %}Logistic Regression | Evaluation Metrics{% endblock %}
+
+{% block content %}
+
+<main class="page-shell">
+
+    <section class="content-panel">
+
+        <p class="eyebrow">
+            <span></span>
+            Logistic Regression
+        </p>
+
+        <h1>
+            Evaluation <em>Metrics</em>
+        </h1>
+
+        <div class="title-line"></div>
+
+        <p class="lead">
+            The Logistic Regression model is evaluated using the 20% test
+            data to measure its classification performance.
+        </p>
+
+        <div class="insight-grid">
+
+            <div class="insight-card">
+                <span class="card-number">ACCURACY</span>
+                <h2>{{ "%.2f"|format(accuracy * 100) }}%</h2>
+                <p>
+                    Percentage of correct predictions made by the model.
+                </p>
+            </div>
+
+            <div class="insight-card">
+                <span class="card-number">PRECISION</span>
+                <h2>{{ "%.2f"|format(precision * 100) }}%</h2>
+                <p>
+                    Measures how many predicted approvals were actually
+                    approvals.
+                </p>
+            </div>
+
+            <div class="insight-card">
+                <span class="card-number">RECALL</span>
+                <h2>{{ "%.2f"|format(recall * 100) }}%</h2>
+                <p>
+                    Measures how many actual approved cases were correctly
+                    identified.
+                </p>
+            </div>
+
+            <div class="insight-card">
+                <span class="card-number">F1-SCORE</span>
+                <h2>{{ "%.2f"|format(f1 * 100) }}%</h2>
+                <p>
+                    Combines precision and recall into a single metric.
+                </p>
+            </div>
+
+        </div>
+
+        <div class="mt-5">
+
+            <h2>Confusion Matrix</h2>
+
+            <p class="lead">
+                The confusion matrix shows the relationship between the
+                actual classes and the classes predicted by the model.
+            </p>
+
+            <div class="table-responsive mt-4">
+
+                <table class="table table-dark table-bordered text-center">
+
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Predicted Rejected</th>
+                            <th>Predicted Approved</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr>
+                            <th>Actual Rejected</th>
+                            <td>{{ matrix[0][0] }}</td>
+                            <td>{{ matrix[0][1] }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Actual Approved</th>
+                            <td>{{ matrix[1][0] }}</td>
+                            <td>{{ matrix[1][1] }}</td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        <div class="mt-5">
+
+            <h2>Test Data</h2>
+
+            <div class="insight-card mt-4">
+
+                <span class="card-number">80 / 20 SPLIT</span>
+
+                <h2>20% Test Data</h2>
+
+                <p>
+                    The model was trained with 80% of the dataset and
+                    evaluated with the remaining 20%.
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="mt-5">
+
+            <h2>Metric Interpretation</h2>
+
+            <p class="lead">
+                The results show how well the model distinguishes between
+                approved and rejected credit applications.
+            </p>
+
+            <div class="insight-grid">
+
+                <div class="insight-card">
+                    <span class="card-number">TP</span>
+                    <h2>{{ matrix[1][1] }}</h2>
+                    <p>
+                        Approved applications correctly classified as
+                        approved.
+                    </p>
+                </div>
+
+                <div class="insight-card">
+                    <span class="card-number">TN</span>
+                    <h2>{{ matrix[0][0] }}</h2>
+                    <p>
+                        Rejected applications correctly classified as
+                        rejected.
+                    </p>
+                </div>
+
+                <div class="insight-card">
+                    <span class="card-number">FP</span>
+                    <h2>{{ matrix[0][1] }}</h2>
+                    <p>
+                        Rejected applications incorrectly classified as
+                        approved.
+                    </p>
+                </div>
+
+                <div class="insight-card">
+                    <span class="card-number">FN</span>
+                    <h2>{{ matrix[1][0] }}</h2>
+                    <p>
+                        Approved applications incorrectly classified as
+                        rejected.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+{% endblock %}
