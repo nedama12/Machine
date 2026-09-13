@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 
-from LinearRegressionGrades import predict_energy
+from LinearRegressionGrades import df, model, predict_energy
 from logistic_regression import predict_credit
 from extra_trees import process_risk_prediction, df as risk_df
 from logistic_regression_metrics import (
@@ -38,7 +38,11 @@ def types():
 
 @app.route("/linear-regression/concepts")
 def linear_regression_concepts():
-    return render_template("linear_regression_concepts.html")
+    return render_template(
+        "linear_regression_concepts.html",
+        coefficient=float(model.coef_[0]),
+        intercept=float(model.intercept_),
+    )
 
 
 @app.route("/linear-regression/application", methods=["GET", "POST"])
@@ -74,7 +78,11 @@ def linear_regression_application():
         "linear_regression_application.html",
         prediction=prediction,
         error=error,
-        hours=hours
+        hours=hours,
+        record_count=len(df),
+        coefficient=float(model.coef_[0]),
+        intercept=float(model.intercept_),
+        example_prediction=float(predict_energy(7)),
     )
 @app.route("/logistic-regression/concepts")
 def logistic_regression_concepts():
