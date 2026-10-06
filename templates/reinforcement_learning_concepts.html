@@ -1,0 +1,335 @@
+{% extends "base.html" %}
+
+{% block title %}Reinforcement Learning | Concepts{% endblock %}
+
+{% block content %}
+
+<main class="page-shell">
+
+    <section class="content-panel">
+
+        <p class="eyebrow">
+            <span></span>
+            Reinforcement Learning
+        </p>
+
+        <h1>
+            Reinforcement <em>Learning</em>
+        </h1>
+
+        <div class="title-line"></div>
+
+        <p class="lead">
+            Reinforcement Learning (RL) is a type of Machine Learning in which
+            an agent learns to make decisions by interacting directly with an
+            environment. Instead of learning from a labeled dataset, the agent
+            learns from experience: it tries actions, observes what happens,
+            and gradually improves its behavior based on the rewards and
+            penalties it receives.
+        </p>
+
+        <div class="alert alert-info rl-alert" role="alert">
+            In this project, the agent is a virtual robot that must cross a
+            <strong>10&times;10 grid</strong> from a starting cell to a target
+            cell, avoiding walls and minimizing time spent in danger zones.
+            Every concept explained below is illustrated using this exact
+            exercise.
+        </div>
+
+        <div class="insight-grid">
+
+            <div class="insight-card">
+                <span class="card-number">01</span>
+                <h2>Agent</h2>
+                <p>
+                    The decision-maker. In our exercise, the agent is the
+                    virtual robot that moves across the grid one cell at a
+                    time, choosing an action at every step.
+                </p>
+            </div>
+
+            <div class="insight-card">
+                <span class="card-number">02</span>
+                <h2>Environment</h2>
+                <p>
+                    Everything the agent interacts with. Here, the
+                    environment is the 10&times;10 grid together with its
+                    movement rules: walls block movement, danger zones
+                    penalize the agent, and the target ends the episode.
+                </p>
+            </div>
+
+            <div class="insight-card">
+                <span class="card-number">03</span>
+                <h2>State</h2>
+                <p>
+                    A snapshot of the situation at a given moment. In this
+                    exercise, the state is simply the agent's current
+                    position, expressed as a (row, column) pair, for example
+                    (0, 0) at the start.
+                </p>
+            </div>
+
+        </div>
+
+        <div class="mt-5">
+
+            <h2>Core Building Blocks</h2>
+
+            <p class="lead">
+                Use the accordion below to review each remaining concept in
+                detail, always connected to the grid exercise implemented in
+                the Application page.
+            </p>
+
+            <div class="accordion mt-4" id="rlConceptsAccordion">
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAction">
+                            Action
+                        </button>
+                    </h2>
+                    <div id="collapseAction" class="accordion-collapse collapse show" data-bs-parent="#rlConceptsAccordion">
+                        <div class="accordion-body">
+                            An action is a choice the agent can make at a
+                            given state. In this exercise there are exactly
+                            four possible actions: <strong>Up</strong>,
+                            <strong>Down</strong>, <strong>Left</strong> and
+                            <strong>Right</strong>. Each action moves the
+                            robot one cell in that direction, if the move is
+                            valid.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseReward">
+                            Reward &amp; Penalty
+                        </button>
+                    </h2>
+                    <div id="collapseReward" class="accordion-collapse collapse" data-bs-parent="#rlConceptsAccordion">
+                        <div class="accordion-body">
+                            A reward is the numeric feedback the environment
+                            gives the agent after an action. A positive
+                            reward encourages a behavior, while a negative
+                            reward (penalty) discourages it. In our grid,
+                            reaching the target gives a large positive
+                            reward, while hitting a wall, attempting an
+                            invalid move, or entering a danger zone produce
+                            different negative rewards, as shown in the
+                            Reward System table on the Application page.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePolicy">
+                            Policy
+                        </button>
+                    </h2>
+                    <div id="collapsePolicy" class="accordion-collapse collapse" data-bs-parent="#rlConceptsAccordion">
+                        <div class="accordion-body">
+                            The policy is the strategy the agent follows to
+                            choose an action for each state. At the
+                            beginning, the policy is essentially random.
+                            After training, the policy tends to pick the
+                            action with the highest estimated value at each
+                            cell of the grid, which is what produces the
+                            final learned path shown after training.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseStepEpisode">
+                            Step &amp; Episode
+                        </button>
+                    </h2>
+                    <div id="collapseStepEpisode" class="accordion-collapse collapse" data-bs-parent="#rlConceptsAccordion">
+                        <div class="accordion-body">
+                            A <strong>step</strong> is a single
+                            state-action-reward-next state transition, for
+                            example moving from (0, 0) to (0, 1). An
+                            <strong>episode</strong> is a complete attempt
+                            that starts at the initial cell (0, 0) and ends
+                            either when the agent reaches the target or when
+                            it uses up the maximum number of allowed steps.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExperience">
+                            Experience
+                        </button>
+                    </h2>
+                    <div id="collapseExperience" class="accordion-collapse collapse" data-bs-parent="#rlConceptsAccordion">
+                        <div class="accordion-body">
+                            Experience is the record of what the agent
+                            observed at every step: the state it was in, the
+                            action it took, the reward it received and the
+                            next state it landed on. Each of these
+                            transitions is what the agent uses to update its
+                            Q-value estimates.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExploration">
+                            Exploration vs Exploitation
+                        </button>
+                    </h2>
+                    <div id="collapseExploration" class="accordion-collapse collapse" data-bs-parent="#rlConceptsAccordion">
+                        <div class="accordion-body">
+                            <strong>Exploration</strong> means trying random
+                            actions to discover new parts of the grid, even
+                            ones that may not seem optimal yet.
+                            <strong>Exploitation</strong> means choosing the
+                            action that currently looks best according to
+                            the agent's own estimates. A good agent needs
+                            both: enough exploration to discover the target
+                            and avoid danger zones, and enough exploitation
+                            to actually use what it has learned.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEpsilon">
+                            Epsilon-Greedy Strategy
+                        </button>
+                    </h2>
+                    <div id="collapseEpsilon" class="accordion-collapse collapse" data-bs-parent="#rlConceptsAccordion">
+                        <div class="accordion-body">
+                            The Epsilon-Greedy strategy balances exploration
+                            and exploitation using a probability
+                            &epsilon; (epsilon). With probability &epsilon;,
+                            the agent picks a random action (exploration);
+                            otherwise, it picks the action with the highest
+                            known Q-value (exploitation). &epsilon; starts
+                            high so the agent explores the grid freely, and
+                            decays over the training episodes so the agent
+                            increasingly relies on what it has learned.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseReturn">
+                            Immediate Reward, Return &amp; Discount Factor
+                        </button>
+                    </h2>
+                    <div id="collapseReturn" class="accordion-collapse collapse" data-bs-parent="#rlConceptsAccordion">
+                        <div class="accordion-body">
+                            The <strong>immediate reward</strong> is the
+                            single reward received right after one action.
+                            The <strong>return</strong> is the accumulated
+                            sum of rewards the agent expects to collect from
+                            a state until the episode ends. Because future
+                            rewards are less certain than immediate ones,
+                            they are multiplied by a
+                            <strong>discount factor (&gamma;)</strong>
+                            between 0 and 1. In this exercise &gamma; = 0.95,
+                            meaning the agent strongly values future rewards
+                            (such as finally reaching the target) while
+                            still slightly favoring faster paths.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseValues">
+                            State Value V(s) and Action Value Q(s,a)
+                        </button>
+                    </h2>
+                    <div id="collapseValues" class="accordion-collapse collapse" data-bs-parent="#rlConceptsAccordion">
+                        <div class="accordion-body">
+                            <strong>V(s)</strong> estimates how good it is to
+                            be in a given cell, assuming the agent then
+                            follows its current policy.
+                            <strong>Q(s, a)</strong> is more specific: it
+                            estimates how good it is to take a particular
+                            action from a particular cell. The Application
+                            page displays, for every walkable cell, the
+                            learned Q-values for the four possible actions.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseQLearning">
+                            Q-Learning
+                        </button>
+                    </h2>
+                    <div id="collapseQLearning" class="accordion-collapse collapse" data-bs-parent="#rlConceptsAccordion">
+                        <div class="accordion-body">
+                            Q-Learning is the algorithm used to estimate
+                            Q(s, a) from experience, without needing a
+                            manually programmed path. After every step, the
+                            agent updates its estimate of Q(s, a) using the
+                            reward it just received plus the discounted
+                            value of the best action available at the next
+                            state. In this implementation, Q(s, a) is
+                            estimated with an <strong>SGDRegressor</strong>:
+                            <code>predict()</code> reads the current
+                            Q-value estimates and <code>partial_fit()</code>
+                            applies the Q-learning correction after each
+                            observed transition, exactly as in the reference
+                            classroom exercise.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="mt-5">
+
+            <h2>Grid Legend Used in the Exercise</h2>
+
+            <div class="table-responsive mt-4">
+
+                <table class="table table-dark table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Character</th>
+                            <th>Meaning</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>A</strong></td><td>Agent start position</td></tr>
+                        <tr><td><strong>T</strong></td><td>Target / goal cell</td></tr>
+                        <tr><td><strong>o</strong></td><td>Available path (open cell)</td></tr>
+                        <tr><td><strong>#</strong></td><td>Wall / obstacle (blocks movement)</td></tr>
+                        <tr><td><strong>D</strong></td><td>Danger zone (can be entered, but penalized)</td></tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+            <p class="lead">
+                The full {{ grid_rows }}&times;{{ grid_cols }} grid, the
+                reward values, the training controls and the learned path
+                can all be explored on the
+                <a href="{{ url_for('reinforcement_learning_application') }}">Application page</a>.
+            </p>
+
+        </div>
+
+    </section>
+
+</main>
+
+{% endblock %}
