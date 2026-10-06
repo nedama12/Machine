@@ -1,0 +1,259 @@
+{% extends "base.html" %}
+
+{% block title %}Reinforcement Learning | Application{% endblock %}
+
+{% block content %}
+
+<main class="page-shell linear-page">
+
+    <section class="content-panel linear-panel">
+
+        <p class="eyebrow">
+            <span></span>
+            Reinforcement Learning &middot; Application
+        </p>
+
+        <h1>
+            Grid World <em>Navigation</em>
+        </h1>
+
+        <div class="title-line"></div>
+
+        <p class="lead">
+            A virtual robot must learn, through trial and error, how to
+            travel from the starting cell to the target cell on a
+            {{ grid_rows }}&times;{{ grid_cols }} grid, avoiding walls and
+            minimizing time spent in danger zones. No path is hard-coded:
+            the route shown below is produced entirely by the trained
+            Q-Learning agent.
+        </p>
+
+        <div class="mt-5">
+
+            <h2>Environment</h2>
+
+            <div class="rl-legend">
+                <span class="rl-legend-item"><span class="rl-swatch rl-swatch-start">A</span> Agent start (1)</span>
+                <span class="rl-legend-item"><span class="rl-swatch rl-swatch-goal">T</span> Target (1)</span>
+                <span class="rl-legend-item"><span class="rl-swatch" style="background:rgba(255,245,243,.08);color:#d4cbc8">o</span> Open path (68)</span>
+                <span class="rl-legend-item"><span class="rl-swatch rl-swatch-wall">#</span> Wall (20)</span>
+                <span class="rl-legend-item"><span class="rl-swatch rl-swatch-danger">D</span> Danger zone (10)</span>
+                <span class="rl-legend-item"><span class="rl-swatch rl-swatch-path">&#10003;</span> Learned path</span>
+            </div>
+
+            <div class="rl-grid-wrap">
+                <div class="rl-grid" style="--rl-cols: {{ grid_cols }}">
+                    {% for row in grid_view %}
+                        {% for cell in row %}
+                            <div class="rl-cell
+                                {% if cell.char == 'A' %}rl-cell-start{% endif %}
+                                {% if cell.char == 'T' %}rl-cell-goal{% endif %}
+                                {% if cell.char == '#' %}rl-cell-wall{% endif %}
+                                {% if cell.char == 'D' %}rl-cell-danger{% endif %}
+                                {% if cell.on_path %}rl-cell-path{% endif %}
+                            ">{{ cell.char if cell.char != 'o' else '' }}</div>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            {% if results %}
+                <div class="alert alert-success rl-alert" role="alert">
+                    The cells outlined in teal show the path the trained
+                    agent actually followed during the final evaluation
+                    (greedy policy, no exploration).
+                </div>
+            {% endif %}
+
+        </div>
+
+        <div class="mt-5">
+
+            <h2>Reward System</h2>
+
+            <div class="table-responsive mt-4">
+                <table class="table table-dark table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Situation</th>
+                            <th>Reward</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Moving to a valid normal (open) position</td><td>{{ reward_step }}</td></tr>
+                        <tr><td>Attempting an invalid movement (outside the grid)</td><td>{{ reward_invalid_move }}</td></tr>
+                        <tr><td>Hitting a wall</td><td>{{ reward_wall }}</td></tr>
+                        <tr><td>Entering a danger zone</td><td>{{ reward_danger_zone }}</td></tr>
+                        <tr><td>Reaching the goal</td><td>+{{ reward_goal }}</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <p class="lead">
+                Small negative rewards push the agent toward shorter routes.
+                Hitting a wall is penalized more than an ordinary step so
+                the agent learns to avoid obstacles, and a danger zone is
+                penalized even more heavily so the agent prefers to go
+                around it whenever a safer route exists &mdash; but it is
+                still allowed to cross one if that is the only way forward.
+                The large positive reward for reaching the target is what
+                ultimately drives the agent toward the goal.
+            </p>
+
+        </div>
+
+        <div class="mt-5">
+
+            <h2>Training Configuration</h2>
+
+            <div class="rl-config-grid">
+                <div class="rl-config-card"><span>Episodes</span><strong>{{ episodes }}</strong></div>
+                <div class="rl-config-card"><span>Discount Factor (&gamma;)</span><strong>{{ gamma }}</strong></div>
+                <div class="rl-config-card"><span>Initial &epsilon;</span><strong>{{ epsilon_start }}</strong></div>
+                <div class="rl-config-card"><span>Minimum &epsilon;</span><strong>{{ epsilon_min }}</strong></div>
+                <div class="rl-config-card"><span>&epsilon; Decay</span><strong>{{ epsilon_decay }}</strong></div>
+            </div>
+
+            <p class="lead mt-4">
+                &epsilon; starts at {{ epsilon_start }} so the agent explores
+                freely, and is multiplied by {{ epsilon_decay }} after every
+                episode until it reaches the floor of {{ epsilon_min }},
+                guaranteeing a small amount of exploration even late in
+                training. &gamma; = {{ gamma }} makes the agent value future
+                rewards strongly, which is necessary on a grid this large.
+            </p>
+
+            <form method="post" class="rl-train-form">
+                <button class="button button-primary" type="submit">
+                    Train Agent <span>&rarr;</span>
+                </button>
+            </form>
+
+        </div>
+
+        {% if results %}
+
+            {% set training = results.training %}
+            {% set evaluation = results.evaluation %}
+
+            <div class="mt-5">
+
+                <h2>Training Results</h2>
+
+                <div class="rl-results-grid">
+                    <div class="rl-stat-card"><span>Total Episodes</span><strong>{{ training.episodes }}</strong></div>
+                    <div class="rl-stat-card rl-stat-success"><span>Successful Episodes</span><strong>{{ training.successful_episodes }}</strong></div>
+                    <div class="rl-stat-card"><span>Success Rate</span><strong>{{ training.success_rate }}%</strong></div>
+                    <div class="rl-stat-card"><span>Average Reward</span><strong>{{ training.average_reward }}</strong></div>
+                    <div class="rl-stat-card"><span>Final &epsilon;</span><strong>{{ training.final_epsilon }}</strong></div>
+                    <div class="rl-stat-card"><span>Movements (Final Evaluation)</span><strong>{{ evaluation.steps_taken }}</strong></div>
+                    <div class="rl-stat-card"><span>Total Reward (Final Evaluation)</span><strong>{{ evaluation.total_reward }}</strong></div>
+                    <div class="rl-stat-card {{ 'rl-stat-success' if evaluation.reached_goal else 'rl-stat-fail' }}">
+                        <span>Goal Reached</span>
+                        <strong>{{ 'Yes' if evaluation.reached_goal else 'No' }}</strong>
+                    </div>
+                </div>
+
+                {% if evaluation.reached_goal %}
+                    <div class="alert alert-success rl-alert" role="alert">
+                        The trained agent reached the target in
+                        {{ evaluation.steps_taken }} moves, collecting a
+                        total reward of {{ evaluation.total_reward }}.
+                    </div>
+                {% else %}
+                    <div class="alert alert-warning rl-alert" role="alert">
+                        The trained agent did not reach the target within
+                        the maximum number of evaluation steps. Try training
+                        again &mdash; Q-Learning is stochastic, so results
+                        can vary between runs.
+                    </div>
+                {% endif %}
+
+            </div>
+
+            <div class="mt-5">
+
+                <h2>Step-by-Step Evaluation (Greedy Policy)</h2>
+
+                <p class="lead">
+                    This table shows the actual execution of the trained
+                    model, with exploration disabled, so every action is
+                    the one the agent considers best at that cell.
+                </p>
+
+                <div class="rl-table-scroll">
+                    <table class="table table-dark table-bordered mb-0">
+                        <thead>
+                            <tr>
+                                <th>Step</th>
+                                <th>State</th>
+                                <th>Action</th>
+                                <th>Next State</th>
+                                <th>Cell Type</th>
+                                <th>Reward</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for entry in evaluation.path_log %}
+                                <tr>
+                                    <td>{{ entry.step }}</td>
+                                    <td>{{ entry.state }}</td>
+                                    <td>{{ entry.action }}</td>
+                                    <td>{{ entry.next_state }}</td>
+                                    <td>{{ entry.cell_type }}</td>
+                                    <td>{{ entry.reward }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+            <div class="mt-5">
+
+                <h2>Learned Q-Values</h2>
+
+                <p class="lead">
+                    For every walkable cell, the table below shows the
+                    Q-value estimated by the trained model for each of the
+                    four possible actions. The agent's greedy policy simply
+                    picks the action with the highest value at each state.
+                </p>
+
+                <div class="rl-table-scroll">
+                    <table class="table table-dark table-bordered mb-0">
+                        <thead>
+                            <tr>
+                                <th>State</th>
+                                <th>Up</th>
+                                <th>Down</th>
+                                <th>Left</th>
+                                <th>Right</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in results.q_table %}
+                                <tr>
+                                    <td>{{ row.state }}</td>
+                                    <td>{{ row.up }}</td>
+                                    <td>{{ row.down }}</td>
+                                    <td>{{ row.left }}</td>
+                                    <td>{{ row.right }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        {% endif %}
+
+        <a class="button button-secondary back-button" href="{{ url_for('home') }}"><span>&larr;</span> Back to Home</a>
+
+    </section>
+
+</main>
+
+{% endblock %}

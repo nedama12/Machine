@@ -1,6 +1,24 @@
 from flask import Flask, render_template, request
 
 from LinearRegressionGrades import df, model, predict_energy
+from reinforcement_learning import (
+    GRID_LAYOUT,
+    GRID_ROWS,
+    GRID_COLS,
+    START_STATE,
+    GOAL_STATE,
+    REWARD_STEP,
+    REWARD_INVALID_MOVE,
+    REWARD_WALL,
+    REWARD_DANGER_ZONE,
+    REWARD_GOAL,
+    DEFAULT_EPISODES,
+    DEFAULT_GAMMA,
+    DEFAULT_EPSILON_START,
+    DEFAULT_EPSILON_MIN,
+    DEFAULT_EPSILON_DECAY,
+    run_training_session,
+)
 from logistic_regression import df as credit_df, predict_credit
 from extra_trees import process_risk_prediction, df as risk_df
 from logistic_regression_metrics import (
@@ -211,6 +229,77 @@ def extra_trees_metrics():
         recall=risk_recall,
         f1=risk_f1
     )
+
+
+def build_grid_view(path_cells=None):
+    path_cells = set(path_cells or [])
+    grid_view = []
+
+    for row_index, row_text in enumerate(GRID_LAYOUT):
+        row_cells = []
+
+        for col_index, character in enumerate(row_text):
+            row_cells.append({
+                "char": character,
+                "on_path": (row_index, col_index) in path_cells,
+            })
+
+        grid_view.append(row_cells)
+
+    return grid_view
+
+
+@app.route("/reinforcement-learning/concepts")
+def reinforcement_learning_concepts():
+    return render_template(
+        "reinforcement_learning_concepts.html",
+        grid_rows=GRID_ROWS,
+        grid_cols=GRID_COLS,
+    )
+
+
+@app.route(
+    "/reinforcement-learning/application",
+    methods=["GET", "POST"]
+)
+def reinforcement_learning_application():
+
+    results = None
+    grid_view = build_grid_view()
+
+    if request.method == "POST":
+
+        session = run_training_session(
+            episodes=DEFAULT_EPISODES,
+            gamma=DEFAULT_GAMMA,
+            epsilon_start=DEFAULT_EPSILON_START,
+            epsilon_min=DEFAULT_EPSILON_MIN,
+            epsilon_decay=DEFAULT_EPSILON_DECAY,
+        )
+
+        results = session
+        grid_view = build_grid_view(session["evaluation"]["path_cells"])
+
+    return render_template(
+        "reinforcement_learning_application.html",
+        grid_view=grid_view,
+        grid_rows=GRID_ROWS,
+        grid_cols=GRID_COLS,
+        start_state=START_STATE,
+        goal_state=GOAL_STATE,
+        reward_step=REWARD_STEP,
+        reward_invalid_move=REWARD_INVALID_MOVE,
+        reward_wall=REWARD_WALL,
+        reward_danger_zone=REWARD_DANGER_ZONE,
+        reward_goal=REWARD_GOAL,
+        episodes=DEFAULT_EPISODES,
+        gamma=DEFAULT_GAMMA,
+        epsilon_start=DEFAULT_EPSILON_START,
+        epsilon_min=DEFAULT_EPSILON_MIN,
+        epsilon_decay=DEFAULT_EPSILON_DECAY,
+        results=results,
+    )
+
 
 if __name__ == "__main__":
     app.run(debug=True)

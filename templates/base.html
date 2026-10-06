@@ -154,6 +154,41 @@
             </div>
 
             <div
+                class="nav-group {{ 'active-group' if request.endpoint in [
+                    'reinforcement_learning_concepts',
+                    'reinforcement_learning_application'
+                ] else '' }}"
+            >
+
+                <button
+                    class="nav-group-toggle"
+                    type="button"
+                >
+                    Reinforcement Learning
+                    <span>+</span>
+                </button>
+
+                <div class="nav-menu">
+
+                    <a
+                        class="{{ 'active' if request.endpoint == 'reinforcement_learning_concepts' else '' }}"
+                        href="{{ url_for('reinforcement_learning_concepts') }}"
+                    >
+                        Concepts
+                    </a>
+
+                    <a
+                        class="{{ 'active' if request.endpoint == 'reinforcement_learning_application' else '' }}"
+                        href="{{ url_for('reinforcement_learning_application') }}"
+                    >
+                        Application
+                    </a>
+
+                </div>
+
+            </div>
+
+            <div
                 class="nav-dropdown {{ 'active' if request.endpoint in (
                     'use_case_1',
                     'use_case_2',
@@ -283,6 +318,10 @@
         })();
 
     </script>
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    ></script>
 
 </body>
 </html>
