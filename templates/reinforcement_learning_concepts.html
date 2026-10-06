@@ -1,102 +1,169 @@
 {% extends "base.html" %}
 {% block title %}Reinforcement Learning Concepts{% endblock %}
 {% block content %}
-<main class="page-shell linear-page"><section class="content-panel linear-panel">
+<main class="page-shell linear-page">
+    <section class="content-panel linear-panel">
 
-<p class="eyebrow"><span></span>Reinforcement Learning &middot; Concepts</p>
-<h1>Reinforcement Learning <em>Concepts</em></h1>
-<div class="title-line"></div>
-<p class="lead">Reinforcement Learning (RL) is a way of learning by interaction: an agent tries actions in an environment, receives rewards or penalties, and gradually discovers which behavior maximizes the reward it collects over time. In this project the agent learns to cross a {{ rows }}&times;{{ cols }} grid with walls and danger zones.</p>
+        <p class="eyebrow"><span></span>Reinforcement Learning &middot; Concepts</p>
+        <h1>Reinforcement Learning <em>Concepts</em></h1>
+        <div class="title-line"></div>
+        <p class="lead">Reinforcement Learning (RL) is a way of learning by interaction: an agent tries actions in an
+            environment, receives rewards or penalties, and gradually discovers which behavior maximizes the reward it
+            collects over time. In this project the agent learns to cross a {{ rows }}&times;{{ cols }} grid with walls
+            and danger zones.</p>
 
-<div class="container-fluid px-0 mt-4">
-    <div class="alert alert-info rl-alert" role="alert">
-        <i class="bi bi-info-circle-fill me-2"></i>
-        <strong>No labeled data is used.</strong> Unlike supervised learning, nobody tells the agent the correct route. It only receives a numeric reward after each move and must find the best route by itself.
-    </div>
-</div>
-
-<h2 class="mt-5">The interaction loop</h2>
-<div class="flow-card">
-    <div><span><i class="bi bi-robot"></i> Agent</span><strong>Chooses an action</strong></div><i>&rarr;</i>
-    <div><span><i class="bi bi-grid-3x3-gap"></i> Environment</span><strong>Applies the movement</strong></div><i>&rarr;</i>
-    <div><span><i class="bi bi-trophy"></i> Reward</span><strong>+ next state</strong></div><i>&rarr;</i>
-    <div><span><i class="bi bi-cpu"></i> Q-model</span><strong>Updates Q(s,a)</strong></div>
-</div>
-
-<h2 class="mt-5">Core elements in this exercise</h2>
-<div class="concept-grid">
-    <article class="detail-card"><h2><i class="bi bi-robot"></i> Agent</h2><p>The virtual robot that starts in cell <strong>A</strong> (0,0) and must reach the target <strong>T</strong>. It is the one that learns.</p></article>
-    <article class="detail-card"><h2><i class="bi bi-map"></i> Environment</h2><p>The {{ rows }}&times;{{ cols }} grid and its movement rules: free cells <strong>o</strong>, walls <strong>#</strong>, danger zones <strong>D</strong> and the target <strong>T</strong>.</p></article>
-    <article class="detail-card"><h2><i class="bi bi-geo-alt"></i> State</h2><p>The agent's current position as (row, column), for example (3,4). There are {{ rows * cols }} possible positions.</p></article>
-    <article class="detail-card"><h2><i class="bi bi-arrows-move"></i> Action</h2><p>One of four moves: <strong>Up, Down, Left, Right</strong>.</p></article>
-    <article class="detail-card"><h2><i class="bi bi-plus-circle"></i> Reward</h2><p>A positive signal. Here only reaching the target gives a positive value ({{ rewards[4][2] }}).</p></article>
-    <article class="detail-card"><h2><i class="bi bi-dash-circle"></i> Penalty</h2><p>A negative reward: every normal step, hitting a wall, leaving the grid and entering a danger zone all cost points.</p></article>
-</div>
-
-<h2 class="mt-5">Reward system used</h2>
-<div class="table-responsive">
-<table class="table table-dark table-striped align-middle">
-    <thead><tr><th>Situation</th><th>Cell type</th><th>Reward</th></tr></thead>
-    <tbody>
-    {% for situation, cell, value in rewards %}
-        <tr><td>{{ situation }}</td><td>{{ cell }}</td><td>{{ value }}</td></tr>
-    {% endfor %}
-    </tbody>
-</table>
-</div>
-
-<h2 class="mt-5">Learning vocabulary</h2>
-<div class="accordion rl-accordion" id="rlConcepts">
-    {% set items = [
-        ('Policy', 'The rule that tells the agent which action to take in each state. After training, the policy is "in every cell, pick the action with the highest Q-value". It is learned, never hand-written.'),
-        ('Step', 'One interaction: the agent picks an action and the environment answers with a next state and a reward. Training allows a limited number of steps per episode.'),
-        ('Episode', 'A full attempt, from cell A until the agent reaches T or runs out of allowed steps. Training repeats many episodes.'),
-        ('Experience', 'The tuple (state, action, reward, next state, done) stored after each step. Experiences are replayed in small batches to update the model.'),
-        ('Exploration', 'Choosing a random action to discover the grid, including risky cells such as D. It is what lets the agent find routes it did not know.'),
-        ('Exploitation', 'Choosing the action with the best estimated Q-value, using what has already been learned.'),
-        ('Epsilon-Greedy strategy', 'With probability &epsilon; the agent explores; otherwise it exploits. Here &epsilon; starts at ' ~ epsilon_start ~ ', is multiplied by ' ~ epsilon_decay ~ ' after each episode and never goes below ' ~ epsilon_min ~ ', so the agent explores a lot at first and almost always exploits at the end.'),
-        ('Immediate reward', 'The reward received right after one action, for instance ' ~ rewards[0][2] ~ ' for stepping on a normal cell or ' ~ rewards[3][2] ~ ' for entering a Danger Zone.'),
-        ('Return', 'The sum of rewards collected along an episode, each one weighted by the discount factor. The agent wants to maximize the return, not just the next reward.'),
-        ('Discount factor (&gamma;)', 'A number between 0 and 1 that decides how much future rewards matter. With &gamma; = ' ~ gamma ~ ' the +' ~ rewards[4][2] ~ ' at the target still influences cells far away from it.'),
-        ('State value V(s)', 'How good it is to be in a cell: the expected return when starting from it and following the policy. Cells near T have high V(s); cells next to walls or D have lower values.'),
-        ('Action value Q(s,a)', 'How good it is to take action a in state s. The table of Q-values per cell (Up, Down, Left, Right) is what the Application page shows. V(s) is the best Q(s,a) of that cell.'),
-        ('Q-Learning', 'An algorithm that improves Q(s,a) after each experience using the target r + &gamma; &middot; max Q(s2,a2), where s2 is the next state. In this project Q(s,a) is estimated with scikit-learn SGDRegressor: predict() reads Q-values and partial_fit() corrects them from the observed transitions.')
-    ] %}
-    {% for title, text in items %}
-    <div class="accordion-item">
-        <h2 class="accordion-header">
-            <button class="accordion-button {{ '' if loop.first else 'collapsed' }}" type="button" data-bs-toggle="collapse" data-bs-target="#rl{{ loop.index }}">
-                <i class="bi bi-bookmark-star me-2"></i>{{ title|safe }}
-            </button>
-        </h2>
-        <div id="rl{{ loop.index }}" class="accordion-collapse collapse {{ 'show' if loop.first else '' }}" data-bs-parent="#rlConcepts">
-            <div class="accordion-body">{{ text|safe }}</div>
+        <div class="container-fluid px-0 mt-4">
+            <div class="alert alert-info rl-alert" role="alert">
+                <i class="bi bi-info-circle-fill me-2"></i>
+                <strong>No labeled data is used.</strong> Unlike supervised learning, nobody tells the agent the correct
+                route. It only receives a numeric reward after each move and must find the best route by itself.
+            </div>
         </div>
-    </div>
-    {% endfor %}
-</div>
 
-<h2 class="mt-5">The Q-Learning update</h2>
-<section class="equation-card">
-    <div><p class="section-label">Target for Q(s,a)</p><p class="equation">r + &gamma; max Q(s2,a2)</p></div>
-    <div class="equation-meaning">
-        <p><strong>s</strong> = current cell</p><p><strong>a</strong> = action taken</p>
-        <p><strong>r</strong> = immediate reward</p><p><strong>s2</strong> = next cell</p>
-        <p><strong>&gamma;</strong> = {{ gamma }}</p><p><strong>max Q(s2,a2)</strong> = best value available from s2</p>
-    </div>
-</section>
+        <h2 class="mt-5">The interaction loop</h2>
+        <div class="flow-card">
+            <div><span><i class="bi bi-robot"></i> Agent</span><strong>Chooses an action</strong></div><i>&rarr;</i>
+            <div><span><i class="bi bi-grid-3x3-gap"></i> Environment</span><strong>Applies the movement</strong></div>
+            <i>&rarr;</i>
+            <div><span><i class="bi bi-trophy"></i> Reward</span><strong>+ next state</strong></div><i>&rarr;</i>
+            <div><span><i class="bi bi-cpu"></i> Q-model</span><strong>Updates Q(s,a)</strong></div>
+        </div>
 
-<div class="alert alert-warning rl-alert" role="alert">
-    <i class="bi bi-exclamation-triangle-fill me-2"></i>
-    <strong>Exploration vs. exploitation:</strong> if the agent only exploited from the beginning it could settle on a mediocre route (for example crossing a Danger Zone); if it only explored it would never use what it learned.
-</div>
+        <h2 class="mt-5">Core elements in this exercise</h2>
+        <div class="concept-grid">
+            <article class="detail-card">
+                <h2><i class="bi bi-robot"></i> Agent</h2>
+                <p>The virtual robot that starts in cell <strong>A</strong> (0,0) and must reach the target
+                    <strong>T</strong>. It is the one that learns.</p>
+            </article>
+            <article class="detail-card">
+                <h2><i class="bi bi-map"></i> Environment</h2>
+                <p>The {{ rows }}&times;{{ cols }} grid and its movement rules: free cells <strong>o</strong>, walls
+                    <strong>#</strong>, danger zones <strong>D</strong> and the target <strong>T</strong>.</p>
+            </article>
+            <article class="detail-card">
+                <h2><i class="bi bi-geo-alt"></i> State</h2>
+                <p>The agent's current position as (row, column), for example (3,4). There are {{ rows * cols }}
+                    possible positions.</p>
+            </article>
+            <article class="detail-card">
+                <h2><i class="bi bi-arrows-move"></i> Action</h2>
+                <p>One of four moves: <strong>Up, Down, Left, Right</strong>.</p>
+            </article>
+            <article class="detail-card">
+                <h2><i class="bi bi-plus-circle"></i> Reward</h2>
+                <p>A positive signal. Here only reaching the target gives a positive value ({{ rewards[4][2] }}).</p>
+            </article>
+            <article class="detail-card">
+                <h2><i class="bi bi-dash-circle"></i> Penalty</h2>
+                <p>A negative reward: every normal step, hitting a wall, leaving the grid and entering a danger zone all
+                    cost points.</p>
+            </article>
+        </div>
 
-<div class="d-flex flex-wrap gap-2 mt-4">
-    <a class="button button-primary" href="{{ url_for('reinforcement_learning_application') }}">Go to Application <span>&rarr;</span></a>
-    <a class="button button-secondary back-button" href="{{ url_for('home') }}"><span>&larr;</span> Back to Home</a>
-</div>
+        <h2 class="mt-5">Reward system used</h2>
+        <div class="table-responsive">
+            <table class="table table-dark table-striped align-middle">
+                <thead>
+                    <tr>
+                        <th>Situation</th>
+                        <th>Cell type</th>
+                        <th>Reward</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for situation, cell, value in rewards %}
+                    <tr>
+                        <td>{{ situation }}</td>
+                        <td>{{ cell }}</td>
+                        <td>{{ value }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
-</section></main>
+        <h2 class="mt-5">Learning vocabulary</h2>
+        <div class="accordion rl-accordion" id="rlConcepts">
+            {% set items = [
+            ('Policy', 'The rule that tells the agent which action to take in each state. After training, the policy is
+            "in every cell, pick the action with the highest Q-value". It is learned, never hand-written.'),
+            ('Step', 'One interaction: the agent picks an action and the environment answers with a next state and a
+            reward. Training allows a limited number of steps per episode.'),
+            ('Episode', 'A full attempt, from cell A until the agent reaches T or runs out of allowed steps. Training
+            repeats many episodes.'),
+            ('Experience', 'The tuple (state, action, reward, next state, done) stored after each step. Experiences are
+            replayed in small batches to update the model.'),
+            ('Exploration', 'Choosing a random action to discover the grid, including risky cells such as D. It is what
+            lets the agent find routes it did not know.'),
+            ('Exploitation', 'Choosing the action with the best estimated Q-value, using what has already been
+            learned.'),
+            ('Epsilon-Greedy strategy', 'With probability &epsilon; the agent explores; otherwise it exploits. Here
+            &epsilon; starts at ' ~ epsilon_start ~ ', is multiplied by ' ~ epsilon_decay ~ ' after each episode and
+            never goes below ' ~ epsilon_min ~ ', so the agent explores a lot at first and almost always exploits at the
+            end.'),
+            ('Immediate reward', 'The reward received right after one action, for instance ' ~ rewards[0][2] ~ ' for
+            stepping on a normal cell or ' ~ rewards[3][2] ~ ' for entering a Danger Zone.'),
+            ('Return', 'The sum of rewards collected along an episode, each one weighted by the discount factor. The
+            agent wants to maximize the return, not just the next reward.'),
+            ('Discount factor (&gamma;)', 'A number between 0 and 1 that decides how much future rewards matter. With
+            &gamma; = ' ~ gamma ~ ' the +' ~ rewards[4][2] ~ ' at the target still influences cells far away from it.'),
+            ('State value V(s)', 'How good it is to be in a cell: the expected return when starting from it and
+            following the policy. Cells near T have high V(s); cells next to walls or D have lower values.'),
+            ('Action value Q(s,a)', 'How good it is to take action a in state s. The table of Q-values per cell (Up,
+            Down, Left, Right) is what the Application page shows. V(s) is the best Q(s,a) of that cell.'),
+            ('Q-Learning', 'An algorithm that improves Q(s,a) after each experience using the target r + &gamma;
+            &middot; max Q(s2,a2), where s2 is the next state. In this project Q(s,a) is estimated with scikit-learn
+            SGDRegressor: predict() reads Q-values and partial_fit() corrects them from the observed transitions.')
+            ] %}
+            {% for title, text in items %}
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button {{ '' if loop.first else 'collapsed' }}" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#rl{{ loop.index }}">
+                        <i class="bi bi-bookmark-star me-2"></i>{{ title|safe }}
+                    </button>
+                </h2>
+                <div id="rl{{ loop.index }}" class="accordion-collapse collapse {{ 'show' if loop.first else '' }}"
+                    data-bs-parent="#rlConcepts">
+                    <div class="accordion-body">{{ text|safe }}</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <h2 class="mt-5">The Q-Learning update</h2>
+        <section class="equation-card">
+            <div>
+                <p class="section-label">Target for Q(s,a)</p>
+                <p class="equation">r + &gamma; max Q(s2,a2)</p>
+            </div>
+            <div class="equation-meaning">
+                <p><strong>s</strong> = current cell</p>
+                <p><strong>a</strong> = action taken</p>
+                <p><strong>r</strong> = immediate reward</p>
+                <p><strong>s2</strong> = next cell</p>
+                <p><strong>&gamma;</strong> = {{ gamma }}</p>
+                <p><strong>max Q(s2,a2)</strong> = best value available from s2</p>
+            </div>
+        </section>
+
+        <div class="alert alert-warning rl-alert" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            <strong>Exploration vs. exploitation:</strong> if the agent only exploited from the beginning it could
+            settle on a mediocre route (for example crossing a Danger Zone); if it only explored it would never use what
+            it learned.
+        </div>
+
+        <div class="d-flex flex-wrap gap-2 mt-4">
+            <a class="button button-primary" href="{{ url_for('reinforcement_learning_application') }}">Go to
+                Application <span>&rarr;</span></a>
+            <a class="button button-secondary back-button" href="{{ url_for('home') }}"><span>&larr;</span> Back to
+                Home</a>
+        </div>
+
+    </section>
+</main>
 {% endblock %}
 {% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

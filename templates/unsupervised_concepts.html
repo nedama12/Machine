@@ -2,36 +2,98 @@
 {% block title %}Unsupervised Machine Learning | Concepts{% endblock %}
 {% block content %}
 <main class="page-shell linear-page">
-<section class="content-panel linear-panel">
-    <p class="eyebrow"><span></span>Activity 3 | Core Concepts</p>
-    <h1>Unsupervised <em>Machine Learning</em></h1>
-    <div class="title-line"></div>
-    <p class="lead">Learn how clustering finds structure in unlabeled data, and how the K-Means model is applied to social media and digital behavior.</p>
+    <section class="content-panel linear-panel">
+        <p class="eyebrow"><span></span>Activity 3 | Core Concepts</p>
+        <h1>Unsupervised <em>Machine Learning</em></h1>
+        <div class="title-line"></div>
+        <p class="lead">Learn how clustering finds structure in unlabeled data, and how the K-Means model is applied to
+            social media and digital behavior.</p>
 
-    <section class="concept-grid">
-        <article class="detail-card"><p class="section-label">Definition</p><h2>What Is Unsupervised Learning?</h2><p>Unsupervised Machine Learning analyzes features without a target label. The algorithm looks for structure in the observations, such as groups, shared patterns, or unusual records. The resulting groups require interpretation using domain context.</p></article>
-        <article class="detail-card"><p class="section-label">Comparison</p><h2>Supervised vs. Unsupervised</h2><p>Supervised learning uses labeled examples to learn a mapping from inputs to known outcomes, such as a class or numeric value. Unsupervised learning has no target column; it organizes observations using similarities among their features.</p></article>
-        <article class="detail-card"><p class="section-label">Grouping</p><h2>Clustering</h2><p>Clustering assigns observations to groups so that members of a cluster are relatively similar under a chosen distance measure. The groups are discovered from the data rather than supplied as ground-truth labels.</p></article>
-    </section>
+        <section class="concept-grid">
+            <article class="detail-card">
+                <p class="section-label">Definition</p>
+                <h2>What Is Unsupervised Learning?</h2>
+                <p>Unsupervised Machine Learning analyzes features without a target label. The algorithm looks for
+                    structure in the observations, such as groups, shared patterns, or unusual records. The resulting
+                    groups require interpretation using domain context.</p>
+            </article>
+            <article class="detail-card">
+                <p class="section-label">Comparison</p>
+                <h2>Supervised vs. Unsupervised</h2>
+                <p>Supervised learning uses labeled examples to learn a mapping from inputs to known outcomes, such as a
+                    class or numeric value. Unsupervised learning has no target column; it organizes observations using
+                    similarities among their features.</p>
+            </article>
+            <article class="detail-card">
+                <p class="section-label">Grouping</p>
+                <h2>Clustering</h2>
+                <p>Clustering assigns observations to groups so that members of a cluster are relatively similar under a
+                    chosen distance measure. The groups are discovered from the data rather than supplied as
+                    ground-truth labels.</p>
+            </article>
+        </section>
 
-    <section class="dataset-section concept-feature">
-        <p class="section-label">Algorithm</p><h2>K-Means</h2>
-        <p>K-Means partitions observations into a chosen number, K, of clusters. It repeatedly assigns each point to its nearest centroid and recomputes each centroid as the mean of the assigned points. The objective is to reduce within-cluster squared distances.</p>
-        <div class="flow-card"><div><strong>Choose K</strong><span>Set the number of groups</span></div><i aria-hidden="true">&rarr;</i><div><strong>Assign</strong><span>Find the nearest centroid</span></div><i aria-hidden="true">&rarr;</i><div><strong>Update</strong><span>Recalculate cluster means</span></div><i aria-hidden="true">&rarr;</i><div><strong>Repeat</strong><span>Stop when assignments stabilize</span></div></div>
-    </section>
+        <section class="dataset-section concept-feature">
+            <p class="section-label">Algorithm</p>
+            <h2>K-Means</h2>
+            <p>K-Means partitions observations into a chosen number, K, of clusters. It repeatedly assigns each point to
+                its nearest centroid and recomputes each centroid as the mean of the assigned points. The objective is
+                to reduce within-cluster squared distances.</p>
+            <div class="flow-card">
+                <div><strong>Choose K</strong><span>Set the number of groups</span></div><i
+                    aria-hidden="true">&rarr;</i>
+                <div><strong>Assign</strong><span>Find the nearest centroid</span></div><i aria-hidden="true">&rarr;</i>
+                <div><strong>Update</strong><span>Recalculate cluster means</span></div><i aria-hidden="true">&rarr;</i>
+                <div><strong>Repeat</strong><span>Stop when assignments stabilize</span></div>
+            </div>
+        </section>
 
-    <section class="two-column-text">
-        <article class="detail-card"><p class="section-label">Cluster Center</p><h2>Centroids</h2><p>A centroid is the mean feature vector of observations assigned to a cluster. It summarizes the center of that group. In this project, centroid values are converted back to the original units to make the profiles easier to interpret.</p></article>
-        <article class="detail-card"><p class="section-label">Optimization</p><h2>Iterations</h2><p>One iteration consists of assigning points to their nearest centroids and recalculating the means. K-Means repeats these steps until assignments stop changing or an iteration limit is reached. The final result can depend on initial centroid placement.</p></article>
-        <article class="detail-card"><p class="section-label">Preprocessing</p><h2>Standardization</h2><p>Features use different units and ranges. StandardScaler centers each feature around its mean and scales it by its standard deviation. This prevents large numeric scales from dominating Euclidean distance. The same fitted scaler is applied to profiles submitted for prediction.</p></article>
-        <article class="detail-card"><p class="section-label">Evaluation</p><h2>Silhouette Score</h2><p>The silhouette score compares how close a point is to its own cluster with how close it is to the nearest alternative cluster. Scores range from -1 to 1; higher values indicate clearer separation. It is not classification accuracy and does not prove that clusters are objectively correct.</p></article>
-    </section>
+        <section class="two-column-text">
+            <article class="detail-card">
+                <p class="section-label">Cluster Center</p>
+                <h2>Centroids</h2>
+                <p>A centroid is the mean feature vector of observations assigned to a cluster. It summarizes the center
+                    of that group. In this project, centroid values are converted back to the original units to make the
+                    profiles easier to interpret.</p>
+            </article>
+            <article class="detail-card">
+                <p class="section-label">Optimization</p>
+                <h2>Iterations</h2>
+                <p>One iteration consists of assigning points to their nearest centroids and recalculating the means.
+                    K-Means repeats these steps until assignments stop changing or an iteration limit is reached. The
+                    final result can depend on initial centroid placement.</p>
+            </article>
+            <article class="detail-card">
+                <p class="section-label">Preprocessing</p>
+                <h2>Standardization</h2>
+                <p>Features use different units and ranges. StandardScaler centers each feature around its mean and
+                    scales it by its standard deviation. This prevents large numeric scales from dominating Euclidean
+                    distance. The same fitted scaler is applied to profiles submitted for prediction.</p>
+            </article>
+            <article class="detail-card">
+                <p class="section-label">Evaluation</p>
+                <h2>Silhouette Score</h2>
+                <p>The silhouette score compares how close a point is to its own cluster with how close it is to the
+                    nearest alternative cluster. Scores range from -1 to 1; higher values indicate clearer separation.
+                    It is not classification accuracy and does not prove that clusters are objectively correct.</p>
+            </article>
+        </section>
 
-    <section class="dataset-section concept-feature">
-        <p class="section-label">Project Application</p><h2>Social Media Usage and Digital Behavior Clustering</h2>
-        <p>This activity uses 1,200 records and five numeric features: age, daily social media hours, daily screen time hours, posts per week, and messages per day. The features are standardized and clustered with K-Means using K = 3. There is no target variable or 80/20 train-test split. The resulting groups are interpreted by comparing their centroids.</p>
-        <div class="dataset-tags"><span>1,200 Records</span><span>5 Numeric Features</span><span>StandardScaler</span><span>K-Means, K = 3</span><span>Silhouette Score: 0.3313</span></div>
-        <div class="hero-actions page-actions"><a class="button button-primary" href="{{ url_for('unsupervised_application') }}">Clustering Application <span>&rarr;</span></a><a class="button button-secondary" href="{{ url_for('unsupervised_manual') }}">Manual Exercise <span>&rarr;</span></a></div>
+        <section class="dataset-section concept-feature">
+            <p class="section-label">Project Application</p>
+            <h2>Social Media Usage and Digital Behavior Clustering</h2>
+            <p>This activity uses 1,200 records and five numeric features: age, daily social media hours, daily screen
+                time hours, posts per week, and messages per day. The features are standardized and clustered with
+                K-Means using K = 3. There is no target variable or 80/20 train-test split. The resulting groups are
+                interpreted by comparing their centroids.</p>
+            <div class="dataset-tags"><span>1,200 Records</span><span>5 Numeric
+                    Features</span><span>StandardScaler</span><span>K-Means, K = 3</span><span>Silhouette Score:
+                    0.3313</span></div>
+            <div class="hero-actions page-actions"><a class="button button-primary"
+                    href="{{ url_for('unsupervised_application') }}">Clustering Application <span>&rarr;</span></a><a
+                    class="button button-secondary" href="{{ url_for('unsupervised_manual') }}">Manual Exercise
+                    <span>&rarr;</span></a></div>
+        </section>
     </section>
-</section></main>
+</main>
 {% endblock %}

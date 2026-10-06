@@ -73,18 +73,8 @@
                         Monthly Income (COP)
                     </label>
 
-                    <input
-                        type="number"
-                        class="form-control"
-                        id="income"
-                        name="income"
-                        placeholder="Example: 3000000"
-                        min="1300000"
-                        max="6000000"
-                        step="1000"
-                        value="{{ income }}"
-                        required
-                    >
+                    <input type="number" class="form-control" id="income" name="income" placeholder="Example: 3000000"
+                        min="1300000" max="6000000" step="1000" value="{{ income }}" required>
 
                 </div>
 
@@ -138,11 +128,8 @@
 
             <h2>Dataset Visualization</h2>
 
-            <img
-                src="{{ url_for('static', filename='credit_approval_graph.png') }}"
-                alt="Credit approval graph"
-                class="img-fluid mt-3"
-            >
+            <img src="{{ url_for('static', filename='credit_approval_graph.png') }}" alt="Credit approval graph"
+                class="img-fluid mt-3">
 
         </div>
 

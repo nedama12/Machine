@@ -72,18 +72,9 @@
                         Monthly Income (COP)
                     </label>
 
-                    <input
-                        type="number"
-                        class="form-control"
-                        id="monthly_income"
-                        name="monthly_income"
-                        placeholder="Example: 3000000"
-                        min="1300000"
-                        max="6000000"
-                        step="1000"
-                        value="{{ monthly_income }}"
-                        required
-                    >
+                    <input type="number" class="form-control" id="monthly_income" name="monthly_income"
+                        placeholder="Example: 3000000" min="1300000" max="6000000" step="1000"
+                        value="{{ monthly_income }}" required>
 
                 </div>
 
@@ -93,16 +84,8 @@
                         Monthly Debt (COP)
                     </label>
 
-                    <input
-                        type="number"
-                        class="form-control"
-                        id="monthly_debt"
-                        name="monthly_debt"
-                        placeholder="Example: 800000"
-                        min="200000"
-                        value="{{ monthly_debt }}"
-                        required
-                    >
+                    <input type="number" class="form-control" id="monthly_debt" name="monthly_debt"
+                        placeholder="Example: 800000" min="200000" value="{{ monthly_debt }}" required>
 
                 </div>
 
@@ -112,17 +95,8 @@
                         Credit Score
                     </label>
 
-                    <input
-                        type="number"
-                        class="form-control"
-                        id="credit_score"
-                        name="credit_score"
-                        placeholder="Example: 700"
-                        min="300"
-                        max="850"
-                        value="{{ credit_score }}"
-                        required
-                    >
+                    <input type="number" class="form-control" id="credit_score" name="credit_score"
+                        placeholder="Example: 700" min="300" max="850" value="{{ credit_score }}" required>
 
                 </div>
 
@@ -132,17 +106,8 @@
                         Age
                     </label>
 
-                    <input
-                        type="number"
-                        class="form-control"
-                        id="age"
-                        name="age"
-                        placeholder="Example: 30"
-                        min="18"
-                        max="70"
-                        value="{{ age }}"
-                        required
-                    >
+                    <input type="number" class="form-control" id="age" name="age" placeholder="Example: 30" min="18"
+                        max="70" value="{{ age }}" required>
 
                 </div>
 
@@ -196,11 +161,8 @@
 
             <h2>Classification Visualization</h2>
 
-            <img
-                src="{{ url_for('static', filename='credit_risk_graph.png') }}"
-                alt="Credit risk classification graph"
-                class="img-fluid mt-3"
-            >
+            <img src="{{ url_for('static', filename='credit_risk_graph.png') }}" alt="Credit risk classification graph"
+                class="img-fluid mt-3">
 
         </div>
 

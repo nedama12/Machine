@@ -2,74 +2,187 @@
 {% block title %}Digital Behavior Clustering | Application{% endblock %}
 {% block content %}
 <main class="page-shell linear-page">
-<section class="content-panel linear-panel">
-    <p class="eyebrow"><span></span>Activity 3 | Unsupervised Learning</p>
-    <h1>Social Media Usage and <em>Digital Behavior Clustering</em></h1>
-    <div class="title-line"></div>
-    <p class="lead">K-Means groups {{ "{:,}".format(record_count) }} user records by five digital behavior features. Explore the model results or assign a profile to its closest cluster.</p>
+    <section class="content-panel linear-panel">
+        <p class="eyebrow"><span></span>Activity 3 | Unsupervised Learning</p>
+        <h1>Social Media Usage and <em>Digital Behavior Clustering</em></h1>
+        <div class="title-line"></div>
+        <p class="lead">K-Means groups {{ "{:,}".format(record_count) }} user records by five digital behavior features.
+            Explore the model results or assign a profile to its closest cluster.</p>
 
-    <div class="model-grid metrics-summary">
-        <div><span>Dataset</span><strong>{{ "{:,}".format(record_count) }} records</strong></div>
-        <div><span>Input Variables</span><strong>{{ feature_count }}</strong></div>
-        <div><span>Number of Clusters</span><strong>{{ profiles|length }}</strong></div>
-        <div><span>Preprocessing</span><strong>StandardScaler</strong></div>
-        <div><span>Algorithm</span><strong>K-Means</strong></div>
-        <div><span>Silhouette Score</span><strong>{{ '%.4f'|format(silhouette) }}</strong></div>
-    </div>
-
-    <section class="two-column-text">
-        <article class="detail-card"><h2>Dataset and Feature Selection</h2><p>This dataset was selected to explore patterns in social media use and broader digital behavior across 1,200 user records. Age provides demographic context; daily social media hours and daily screen time describe time spent using digital platforms; posts per week and messages per day describe interaction frequency. Together, the five numerical variables represent distinct but related aspects of users' digital activity.</p></article>
-        <article class="detail-card"><h2>Preprocessing and Clustering</h2><p>The five numerical variables were selected as model inputs. StandardScaler was fitted and applied to those variables, and K-Means was fitted to the standardized data with three clusters. No train/test split was used because this is an unsupervised clustering task without a target label or supervised prediction evaluation.</p></article>
-    </section>
-
-    <div class="application-grid">
-        <section class="prediction-card prediction-priority">
-            <h2>Predict a Cluster</h2>
-            <p class="prediction-help">Enter a profile within the observed dataset ranges. The existing StandardScaler and K-Means model process the values.</p>
-            <form method="post">
-                <label for="age">Age</label><div class="input-row"><input id="age" name="age" type="number" min="{{ bounds.age[0] }}" max="{{ bounds.age[1] }}" step="1" value="{{ form_values.age }}" required></div>
-                <label for="social_hours">Daily Social Media Hours</label><div class="input-row"><input id="social_hours" name="social_hours" type="number" min="{{ bounds.social_hours[0] }}" max="{{ bounds.social_hours[1] }}" step="0.1" value="{{ form_values.social_hours }}" required><span>hours</span></div>
-                <label for="screen_hours">Daily Screen Time Hours</label><div class="input-row"><input id="screen_hours" name="screen_hours" type="number" min="{{ bounds.screen_hours[0] }}" max="{{ bounds.screen_hours[1] }}" step="0.1" value="{{ form_values.screen_hours }}" required><span>hours</span></div>
-                <label for="posts">Posts Per Week</label><div class="input-row"><input id="posts" name="posts" type="number" min="{{ bounds.posts[0] }}" max="{{ bounds.posts[1] }}" step="1" value="{{ form_values.posts }}" required><span>posts</span></div>
-                <label for="messages">Messages Per Day</label><div class="input-row"><input id="messages" name="messages" type="number" min="{{ bounds.messages[0] }}" max="{{ bounds.messages[1] }}" step="1" value="{{ form_values.messages }}" required><span>messages</span></div>
-                <button class="button button-primary" type="submit">Predict Cluster <span>&rarr;</span></button>
-            </form>
-            {% if error %}<p class="form-error" role="alert">{{ error }}</p>{% endif %}
-            {% if prediction is not none %}
-            <div class="result-card" role="status"><span>Predicted Group</span><strong>Cluster {{ prediction }}</strong><p>{{ profiles[prediction].interpretation }} | {{ profiles[prediction].count }} records.</p><p>{{ profiles[prediction].summary }}</p></div>
-            {% endif %}
-        </section>
-        <section class="detail-card cluster-overview"><h2>Cluster Interpretation</h2>
-            <div class="cluster-profile-list">
-            {% for profile in profiles %}<article class="cluster-profile"><div><strong>Cluster {{ profile.cluster }}</strong><span>{{ profile.count }} records</span></div><h3>{{ profile.interpretation }}</h3><p>{{ profile.summary }}</p></article>{% endfor %}
-            </div>
-            <a class="button button-secondary" href="{{ url_for('unsupervised_metrics') }}">View Evaluation Details <span>&rarr;</span></a>
-        </section>
-    </div>
-
-    <section class="dataset-section"><div class="dataset-head"><h2>Cluster Distribution</h2><p>Membership across {{ "{:,}".format(record_count) }} records.</p></div>
-        <div class="cluster-count-grid">{% for profile in profiles %}<article><span>Cluster {{ profile.cluster }}</span><strong>{{ profile.count }}</strong><small>{{ '%.1f'|format(profile.count / record_count * 100) }}% of records</small></article>{% endfor %}</div>
-    </section>
-
-    <section class="dataset-section"><div class="dataset-head"><h2>Centroid Profiles</h2><p>Provided K-Means centroid values in original units.</p></div>
-        <div class="table-responsive"><table class="table table-dark table-striped align-middle mt-3"><thead><tr><th>Cluster</th><th>Age</th><th>Daily Social Media Hours</th><th>Daily Screen Time Hours</th><th>Posts Per Week</th><th>Messages Per Day</th><th>Interpretation</th></tr></thead><tbody>
-        {% for profile in profiles %}<tr><th>Cluster {{ profile.cluster }}</th><td>{{ '%.4f'|format(profile.age) }}</td><td>{{ '%.4f'|format(profile.social_hours) }}</td><td>{{ '%.4f'|format(profile.screen_hours) }}</td><td>{{ '%.4f'|format(profile.posts_per_week) }}</td><td>{{ '%.4f'|format(profile.messages_per_day) }}</td><td>{{ profile.interpretation }}</td></tr>{% endfor %}
-        </tbody></table></div>
-    </section>
-
-    <section class="graph-section"><h2>Cluster Visualization</h2><p class="prediction-help">The plot shows social media hours against screen time. The clustering model uses all five standardized variables.</p><img class="regression-graph" src="{{ url_for('static', filename='kmeans_clusters.png') }}" alt="K-Means clusters plotted by daily social media hours and screen time"></section>
-
-    <section class="dataset-section">
-        <div class="dataset-head"><h2>Clustered Records</h2><p>Showing {{ (records_page - 1) * 50 + 1 }}–{{ (records_page - 1) * 50 + clustered_records|length }} of {{ records_total }} records.</p></div>
-        <div class="table-responsive"><table class="table table-dark table-striped align-middle mt-3"><thead><tr><th>Record</th><th>Age</th><th>Daily Social Media Hours</th><th>Daily Screen Time Hours</th><th>Posts Per Week</th><th>Messages Per Day</th><th>Cluster</th></tr></thead><tbody>
-            {% for record in clustered_records %}<tr><th>{{ record.record }}</th><td>{{ record.age }}</td><td>{{ record.social_hours }}</td><td>{{ record.screen_hours }}</td><td>{{ record.posts }}</td><td>{{ record.messages }}</td><td>Cluster {{ record.cluster }}</td></tr>{% endfor %}
-        </tbody></table></div>
-        <div class="hero-actions page-actions" aria-label="Clustered records pagination">
-            {% if records_page > 1 %}<a class="button button-secondary" href="{{ url_for('unsupervised_application', page=records_page - 1) }}">&larr; Previous</a>{% endif %}
-            <span class="prediction-help">Page {{ records_page }} of {{ page_count }}</span>
-            {% if records_page < page_count %}<a class="button button-secondary" href="{{ url_for('unsupervised_application', page=records_page + 1) }}">Next &rarr;</a>{% endif %}
+        <div class="model-grid metrics-summary">
+            <div><span>Dataset</span><strong>{{ "{:,}".format(record_count) }} records</strong></div>
+            <div><span>Input Variables</span><strong>{{ feature_count }}</strong></div>
+            <div><span>Number of Clusters</span><strong>{{ profiles|length }}</strong></div>
+            <div><span>Preprocessing</span><strong>StandardScaler</strong></div>
+            <div><span>Algorithm</span><strong>K-Means</strong></div>
+            <div><span>Silhouette Score</span><strong>{{ '%.4f'|format(silhouette) }}</strong></div>
         </div>
+
+        <section class="two-column-text">
+            <article class="detail-card">
+                <h2>Dataset and Feature Selection</h2>
+                <p>This dataset was selected to explore patterns in social media use and broader digital behavior across
+                    1,200 user records. Age provides demographic context; daily social media hours and daily screen time
+                    describe time spent using digital platforms; posts per week and messages per day describe
+                    interaction frequency. Together, the five numerical variables represent distinct but related aspects
+                    of users' digital activity.</p>
+            </article>
+            <article class="detail-card">
+                <h2>Preprocessing and Clustering</h2>
+                <p>The five numerical variables were selected as model inputs. StandardScaler was fitted and applied to
+                    those variables, and K-Means was fitted to the standardized data with three clusters. No train/test
+                    split was used because this is an unsupervised clustering task without a target label or supervised
+                    prediction evaluation.</p>
+            </article>
+        </section>
+
+        <div class="application-grid">
+            <section class="prediction-card prediction-priority">
+                <h2>Predict a Cluster</h2>
+                <p class="prediction-help">Enter a profile within the observed dataset ranges. The existing
+                    StandardScaler and K-Means model process the values.</p>
+                <form method="post">
+                    <label for="age">Age</label>
+                    <div class="input-row"><input id="age" name="age" type="number" min="{{ bounds.age[0] }}"
+                            max="{{ bounds.age[1] }}" step="1" value="{{ form_values.age }}" required></div>
+                    <label for="social_hours">Daily Social Media Hours</label>
+                    <div class="input-row"><input id="social_hours" name="social_hours" type="number"
+                            min="{{ bounds.social_hours[0] }}" max="{{ bounds.social_hours[1] }}" step="0.1"
+                            value="{{ form_values.social_hours }}" required><span>hours</span></div>
+                    <label for="screen_hours">Daily Screen Time Hours</label>
+                    <div class="input-row"><input id="screen_hours" name="screen_hours" type="number"
+                            min="{{ bounds.screen_hours[0] }}" max="{{ bounds.screen_hours[1] }}" step="0.1"
+                            value="{{ form_values.screen_hours }}" required><span>hours</span></div>
+                    <label for="posts">Posts Per Week</label>
+                    <div class="input-row"><input id="posts" name="posts" type="number" min="{{ bounds.posts[0] }}"
+                            max="{{ bounds.posts[1] }}" step="1" value="{{ form_values.posts }}"
+                            required><span>posts</span></div>
+                    <label for="messages">Messages Per Day</label>
+                    <div class="input-row"><input id="messages" name="messages" type="number"
+                            min="{{ bounds.messages[0] }}" max="{{ bounds.messages[1] }}" step="1"
+                            value="{{ form_values.messages }}" required><span>messages</span></div>
+                    <button class="button button-primary" type="submit">Predict Cluster <span>&rarr;</span></button>
+                </form>
+                {% if error %}<p class="form-error" role="alert">{{ error }}</p>{% endif %}
+                {% if prediction is not none %}
+                <div class="result-card" role="status"><span>Predicted Group</span><strong>Cluster {{ prediction
+                        }}</strong>
+                    <p>{{ profiles[prediction].interpretation }} | {{ profiles[prediction].count }} records.</p>
+                    <p>{{ profiles[prediction].summary }}</p>
+                </div>
+                {% endif %}
+            </section>
+            <section class="detail-card cluster-overview">
+                <h2>Cluster Interpretation</h2>
+                <div class="cluster-profile-list">
+                    {% for profile in profiles %}<article class="cluster-profile">
+                        <div><strong>Cluster {{ profile.cluster }}</strong><span>{{ profile.count }} records</span>
+                        </div>
+                        <h3>{{ profile.interpretation }}</h3>
+                        <p>{{ profile.summary }}</p>
+                    </article>{% endfor %}
+                </div>
+                <a class="button button-secondary" href="{{ url_for('unsupervised_metrics') }}">View Evaluation Details
+                    <span>&rarr;</span></a>
+            </section>
+        </div>
+
+        <section class="dataset-section">
+            <div class="dataset-head">
+                <h2>Cluster Distribution</h2>
+                <p>Membership across {{ "{:,}".format(record_count) }} records.</p>
+            </div>
+            <div class="cluster-count-grid">{% for profile in profiles %}<article><span>Cluster {{ profile.cluster
+                        }}</span><strong>{{ profile.count }}</strong><small>{{ '%.1f'|format(profile.count /
+                        record_count * 100) }}% of records</small></article>{% endfor %}</div>
+        </section>
+
+        <section class="dataset-section">
+            <div class="dataset-head">
+                <h2>Centroid Profiles</h2>
+                <p>Provided K-Means centroid values in original units.</p>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-dark table-striped align-middle mt-3">
+                    <thead>
+                        <tr>
+                            <th>Cluster</th>
+                            <th>Age</th>
+                            <th>Daily Social Media Hours</th>
+                            <th>Daily Screen Time Hours</th>
+                            <th>Posts Per Week</th>
+                            <th>Messages Per Day</th>
+                            <th>Interpretation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for profile in profiles %}<tr>
+                            <th>Cluster {{ profile.cluster }}</th>
+                            <td>{{ '%.4f'|format(profile.age) }}</td>
+                            <td>{{ '%.4f'|format(profile.social_hours) }}</td>
+                            <td>{{ '%.4f'|format(profile.screen_hours) }}</td>
+                            <td>{{ '%.4f'|format(profile.posts_per_week) }}</td>
+                            <td>{{ '%.4f'|format(profile.messages_per_day) }}</td>
+                            <td>{{ profile.interpretation }}</td>
+                        </tr>{% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="graph-section">
+            <h2>Cluster Visualization</h2>
+            <p class="prediction-help">The plot shows social media hours against screen time. The clustering model uses
+                all five standardized variables.</p><img class="regression-graph"
+                src="{{ url_for('static', filename='kmeans_clusters.png') }}"
+                alt="K-Means clusters plotted by daily social media hours and screen time">
+        </section>
+
+        <section class="dataset-section">
+            <div class="dataset-head">
+                <h2>Clustered Records</h2>
+                <p>Showing {{ (records_page - 1) * 50 + 1 }}–{{ (records_page - 1) * 50 + clustered_records|length }} of
+                    {{ records_total }} records.</p>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-dark table-striped align-middle mt-3">
+                    <thead>
+                        <tr>
+                            <th>Record</th>
+                            <th>Age</th>
+                            <th>Daily Social Media Hours</th>
+                            <th>Daily Screen Time Hours</th>
+                            <th>Posts Per Week</th>
+                            <th>Messages Per Day</th>
+                            <th>Cluster</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in clustered_records %}<tr>
+                            <th>{{ record.record }}</th>
+                            <td>{{ record.age }}</td>
+                            <td>{{ record.social_hours }}</td>
+                            <td>{{ record.screen_hours }}</td>
+                            <td>{{ record.posts }}</td>
+                            <td>{{ record.messages }}</td>
+                            <td>Cluster {{ record.cluster }}</td>
+                        </tr>{% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="hero-actions page-actions" aria-label="Clustered records pagination">
+                {% if records_page > 1 %}<a class="button button-secondary"
+                    href="{{ url_for('unsupervised_application', page=records_page - 1) }}">&larr; Previous</a>{% endif
+                %}
+                <span class="prediction-help">Page {{ records_page }} of {{ page_count }}</span>
+                {% if records_page < page_count %}<a class="button button-secondary"
+                    href="{{ url_for('unsupervised_application', page=records_page + 1) }}">Next &rarr;</a>{% endif %}
+            </div>
+        </section>
+        <div class="hero-actions page-actions"><a class="button button-secondary"
+                href="{{ url_for('unsupervised_concepts') }}">Review Concepts <span>&rarr;</span></a><a
+                class="button button-secondary" href="{{ url_for('unsupervised_manual') }}">Open Manual Exercise
+                <span>&rarr;</span></a></div>
     </section>
-    <div class="hero-actions page-actions"><a class="button button-secondary" href="{{ url_for('unsupervised_concepts') }}">Review Concepts <span>&rarr;</span></a><a class="button button-secondary" href="{{ url_for('unsupervised_manual') }}">Open Manual Exercise <span>&rarr;</span></a></div>
-</section></main>
+</main>
 {% endblock %}

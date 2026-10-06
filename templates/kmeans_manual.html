@@ -2,73 +2,178 @@
 {% block title %}K-Means | Manual Exercise{% endblock %}
 {% block content %}
 <main class="page-shell linear-page">
-<section class="content-panel linear-panel">
-    <p class="eyebrow"><span></span>Activity 3 | Worked Example</p>
-    <h1>Manual <em>K-Means Exercise</em></h1>
-    <div class="title-line"></div>
-    <p class="lead">A three-cluster calculation using 100 records and two digital behavior variables. The supplied centroid and SSE results are shown below.</p>
+    <section class="content-panel linear-panel">
+        <p class="eyebrow"><span></span>Activity 3 | Worked Example</p>
+        <h1>Manual <em>K-Means Exercise</em></h1>
+        <div class="title-line"></div>
+        <p class="lead">A three-cluster calculation using 100 records and two digital behavior variables. The supplied
+            centroid and SSE results are shown below.</p>
 
-    <section class="dataset-section manual-context">
-        <div class="dataset-head"><h2>Dataset Context</h2><p>{{ exercise.record_count }} records | {{ exercise.variables|length }} variables | 3 clusters</p></div>
-        <p class="manual-copy">Each record is represented by Daily_Social_Media_Hours and Daily_Screen_Time_Hours. K-Means assigns each record to the nearest centroid, then updates each centroid to the mean of its assigned records.</p>
-        <div class="dataset-tags"><span>Daily_Social_Media_Hours</span><span>Daily_Screen_Time_Hours</span></div>
-    </section>
+        <section class="dataset-section manual-context">
+            <div class="dataset-head">
+                <h2>Dataset Context</h2>
+                <p>{{ exercise.record_count }} records | {{ exercise.variables|length }} variables | 3 clusters</p>
+            </div>
+            <p class="manual-copy">Each record is represented by Daily_Social_Media_Hours and Daily_Screen_Time_Hours.
+                K-Means assigns each record to the nearest centroid, then updates each centroid to the mean of its
+                assigned records.</p>
+            <div class="dataset-tags"><span>Daily_Social_Media_Hours</span><span>Daily_Screen_Time_Hours</span></div>
+        </section>
 
-    <section class="dataset-section">
-        <div class="dataset-head"><h2>Initial Centroids</h2><p>Coordinates are (Daily Social Media Hours, Daily Screen Time Hours).</p></div>
-        <div class="table-responsive"><table class="table table-dark table-striped align-middle mt-3"><thead><tr><th>Centroid</th><th>Daily Social Media Hours</th><th>Daily Screen Time Hours</th></tr></thead><tbody>
-            {% for centroid in exercise.iterations[0].centroids %}<tr><th>C{{ loop.index }}</th><td>{{ '%.4f'|format(centroid[0]) }}</td><td>{{ '%.4f'|format(centroid[1]) }}</td></tr>{% endfor %}
-        </tbody></table></div>
-    </section>
+        <section class="dataset-section">
+            <div class="dataset-head">
+                <h2>Initial Centroids</h2>
+                <p>Coordinates are (Daily Social Media Hours, Daily Screen Time Hours).</p>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-dark table-striped align-middle mt-3">
+                    <thead>
+                        <tr>
+                            <th>Centroid</th>
+                            <th>Daily Social Media Hours</th>
+                            <th>Daily Screen Time Hours</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for centroid in exercise.iterations[0].centroids %}<tr>
+                            <th>C{{ loop.index }}</th>
+                            <td>{{ '%.4f'|format(centroid[0]) }}</td>
+                            <td>{{ '%.4f'|format(centroid[1]) }}</td>
+                        </tr>{% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
 
-    <section class="dataset-section">
-        <div class="dataset-head"><h2>Distance and Assignment Tables</h2><p>One record row is required for every distance calculation.</p></div>
-        <p class="manual-copy">The project files do not contain the 100-row manual exercise input. They include the separate 1,200-row application dataset and the supplied centroids and SSE values, but not the 100 records' values for both exercise variables. Without those 100 pairs, the distances to C1, C2, and C3, nearest-centroid assignments, and assignment-colored iteration plots cannot be reproduced. No records or results have been fabricated.</p>
-        <p class="manual-copy">To complete the requested tables and plots, the missing source is the exact 100-row exercise dataset with Daily_Social_Media_Hours and Daily_Screen_Time_Hours for each record (or the original completed workbook containing those rows and assignments).</p>
-    </section>
+        <section class="dataset-section">
+            <div class="dataset-head">
+                <h2>Distance and Assignment Tables</h2>
+                <p>One record row is required for every distance calculation.</p>
+            </div>
+            <p class="manual-copy">The project files do not contain the 100-row manual exercise input. They include the
+                separate 1,200-row application dataset and the supplied centroids and SSE values, but not the 100
+                records' values for both exercise variables. Without those 100 pairs, the distances to C1, C2, and C3,
+                nearest-centroid assignments, and assignment-colored iteration plots cannot be reproduced. No records or
+                results have been fabricated.</p>
+            <p class="manual-copy">To complete the requested tables and plots, the missing source is the exact 100-row
+                exercise dataset with Daily_Social_Media_Hours and Daily_Screen_Time_Hours for each record (or the
+                original completed workbook containing those rows and assignments).</p>
+        </section>
 
-    <section class="dataset-section">
-        <div class="dataset-head"><h2>How to Perform Each Iteration</h2><p>Apply the same three steps to all 100 records.</p></div>
-        <ol class="manual-copy">
-            <li><strong>Measure distance:</strong> for a record (x, y) and centroid (a, b), calculate the Euclidean distance: d = √((x − a)² + (y − b)²).</li>
-            <li><strong>Assign the record:</strong> compare its distance to C1, C2, and C3, then assign it to the closest centroid.</li>
-            <li><strong>Update each centroid:</strong> average the social media hours and screen time of the records assigned to that cluster: Ck = (mean(x), mean(y)).</li>
-            <li><strong>Evaluate the assignment:</strong> sum the squared distance from every record to its assigned centroid. This is the within-cluster SSE.</li>
-        </ol>
-        <p class="manual-copy">Repeat assignment and update using the new centroids. The centroid and SSE tables below show the supplied results; the record-level distance and assignment results require the missing 100-row input stated above.</p>
-    </section>
+        <section class="dataset-section">
+            <div class="dataset-head">
+                <h2>How to Perform Each Iteration</h2>
+                <p>Apply the same three steps to all 100 records.</p>
+            </div>
+            <ol class="manual-copy">
+                <li><strong>Measure distance:</strong> for a record (x, y) and centroid (a, b), calculate the Euclidean
+                    distance: d = √((x − a)² + (y − b)²).</li>
+                <li><strong>Assign the record:</strong> compare its distance to C1, C2, and C3, then assign it to the
+                    closest centroid.</li>
+                <li><strong>Update each centroid:</strong> average the social media hours and screen time of the records
+                    assigned to that cluster: Ck = (mean(x), mean(y)).</li>
+                <li><strong>Evaluate the assignment:</strong> sum the squared distance from every record to its assigned
+                    centroid. This is the within-cluster SSE.</li>
+            </ol>
+            <p class="manual-copy">Repeat assignment and update using the new centroids. The centroid and SSE tables
+                below show the supplied results; the record-level distance and assignment results require the missing
+                100-row input stated above.</p>
+        </section>
 
-    <section class="dataset-section">
-        <div class="dataset-head"><h2>Centroid Updates</h2><p>Centroids are shown as (social media hours, screen time hours).</p></div>
-        {% for iteration in exercise.iterations %}
-        <article class="manual-iteration">
-            <div class="manual-iteration-heading"><h3>{{ iteration.name }}</h3><span>SSE: {{ '%.2f'|format(iteration.sse) }}</span></div>
-            <div class="table-responsive"><table class="table table-dark table-striped align-middle"><thead><tr><th>Centroid</th><th>Daily Social Media Hours</th><th>Daily Screen Time Hours</th></tr></thead><tbody>
-            {% for centroid in iteration.centroids %}<tr><th>C{{ loop.index }}</th><td>{{ '%.4f'|format(centroid[0]) }}</td><td>{{ '%.4f'|format(centroid[1]) }}</td></tr>{% endfor %}
-            </tbody></table></div>
-        </article>
-        {% endfor %}
-    </section>
+        <section class="dataset-section">
+            <div class="dataset-head">
+                <h2>Centroid Updates</h2>
+                <p>Centroids are shown as (social media hours, screen time hours).</p>
+            </div>
+            {% for iteration in exercise.iterations %}
+            <article class="manual-iteration">
+                <div class="manual-iteration-heading">
+                    <h3>{{ iteration.name }}</h3><span>SSE: {{ '%.2f'|format(iteration.sse) }}</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-dark table-striped align-middle">
+                        <thead>
+                            <tr>
+                                <th>Centroid</th>
+                                <th>Daily Social Media Hours</th>
+                                <th>Daily Screen Time Hours</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for centroid in iteration.centroids %}<tr>
+                                <th>C{{ loop.index }}</th>
+                                <td>{{ '%.4f'|format(centroid[0]) }}</td>
+                                <td>{{ '%.4f'|format(centroid[1]) }}</td>
+                            </tr>{% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+            {% endfor %}
+        </section>
 
-    <section class="dataset-section">
-        <div class="dataset-head"><h2>SSE Comparison</h2><p>SSE means Sum of Squared Errors; lower values indicate more compact assignments.</p></div>
-        <div class="table-responsive"><table class="table table-dark table-striped align-middle mt-3"><thead><tr><th>Stage</th><th>Sum of Squared Errors (SSE)</th><th>Change from Previous Stage</th></tr></thead><tbody>
-        {% for iteration in exercise.iterations %}<tr><th>{{ iteration.name }}</th><td>{{ '%.2f'|format(iteration.sse) }}</td><td>{% if loop.first %}Baseline{% else %}{{ '%.2f'|format(exercise.iterations[loop.index0 - 1].sse - iteration.sse) }} lower{% endif %}</td></tr>{% endfor %}
-        </tbody></table></div>
-    </section>
+        <section class="dataset-section">
+            <div class="dataset-head">
+                <h2>SSE Comparison</h2>
+                <p>SSE means Sum of Squared Errors; lower values indicate more compact assignments.</p>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-dark table-striped align-middle mt-3">
+                    <thead>
+                        <tr>
+                            <th>Stage</th>
+                            <th>Sum of Squared Errors (SSE)</th>
+                            <th>Change from Previous Stage</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for iteration in exercise.iterations %}<tr>
+                            <th>{{ iteration.name }}</th>
+                            <td>{{ '%.2f'|format(iteration.sse) }}</td>
+                            <td>{% if loop.first %}Baseline{% else %}{{ '%.2f'|format(exercise.iterations[loop.index0 -
+                                1].sse - iteration.sse) }} lower{% endif %}</td>
+                        </tr>{% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
 
-    <section class="dataset-section">
-        <div class="dataset-head"><h2>Within-Cluster Variance</h2><p>Distinct from SSE.</p></div>
-        <p class="manual-copy">A valid within-cluster variance comparison cannot be calculated from the supplied results alone. SSE is the total of squared distances to assigned centroids; variance requires the individual record values and their cluster assignments (or equivalent per-cluster sums and counts) for each iteration. Those iteration-level inputs are not available, so no variance values are reported.</p>
-    </section>
+        <section class="dataset-section">
+            <div class="dataset-head">
+                <h2>Within-Cluster Variance</h2>
+                <p>Distinct from SSE.</p>
+            </div>
+            <p class="manual-copy">A valid within-cluster variance comparison cannot be calculated from the supplied
+                results alone. SSE is the total of squared distances to assigned centroids; variance requires the
+                individual record values and their cluster assignments (or equivalent per-cluster sums and counts) for
+                each iteration. Those iteration-level inputs are not available, so no variance values are reported.</p>
+        </section>
 
-    <section class="two-column-text">
-        <article class="detail-card"><h2>Final Interpretation</h2><p>Across the three reported updates, SSE decreases from 168.79 to 159.22, indicating a lower total squared distance under the supplied results. C1 is unchanged between Iterations 2 and 3, while C2 and C3 still move, so Iteration 3 is the last reported step rather than evidence that every centroid has converged.</p></article>
-        <article class="detail-card"><h2>Iteration Images</h2>
-            {% if images %}<div class="manual-image-grid">{% for image in images %}<figure><img src="{{ url_for('static', filename=image) }}" alt="{{ image|replace('_', ' ')|replace('.png', '') }}"><figcaption>{{ image|replace('_', ' ')|replace('.png', '') }}</figcaption></figure>{% endfor %}</div>
-            {% else %}<p class="manual-copy">The required plots kmeans_initial.png, kmeans_iteration_1.png, kmeans_iteration_2.png, and kmeans_iteration_3.png are not present. They cannot be created from the available files because the 100 exercise records are missing; the 1,200-row application dataset is a different input.</p>{% endif %}
-        </article>
+        <section class="two-column-text">
+            <article class="detail-card">
+                <h2>Final Interpretation</h2>
+                <p>Across the three reported updates, SSE decreases from 168.79 to 159.22, indicating a lower total
+                    squared distance under the supplied results. C1 is unchanged between Iterations 2 and 3, while C2
+                    and C3 still move, so Iteration 3 is the last reported step rather than evidence that every centroid
+                    has converged.</p>
+            </article>
+            <article class="detail-card">
+                <h2>Iteration Images</h2>
+                {% if images %}<div class="manual-image-grid">{% for image in images %}<figure><img
+                            src="{{ url_for('static', filename=image) }}"
+                            alt="{{ image|replace('_', ' ')|replace('.png', '') }}">
+                        <figcaption>{{ image|replace('_', ' ')|replace('.png', '') }}</figcaption>
+                    </figure>{% endfor %}</div>
+                {% else %}<p class="manual-copy">The required plots kmeans_initial.png, kmeans_iteration_1.png,
+                    kmeans_iteration_2.png, and kmeans_iteration_3.png are not present. They cannot be created from the
+                    available files because the 100 exercise records are missing; the 1,200-row application dataset is a
+                    different input.</p>{% endif %}
+            </article>
+        </section>
+        <div class="hero-actions page-actions"><a class="button button-primary"
+                href="{{ url_for('unsupervised_application') }}">Open Clustering Application <span>&rarr;</span></a><a
+                class="button button-secondary" href="{{ url_for('unsupervised_concepts') }}">Review K-Means Concepts
+                <span>&rarr;</span></a></div>
     </section>
-    <div class="hero-actions page-actions"><a class="button button-primary" href="{{ url_for('unsupervised_application') }}">Open Clustering Application <span>&rarr;</span></a><a class="button button-secondary" href="{{ url_for('unsupervised_concepts') }}">Review K-Means Concepts <span>&rarr;</span></a></div>
-</section></main>
+</main>
 {% endblock %}
