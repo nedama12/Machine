@@ -1,0 +1,25 @@
+﻿{% extends "base.html" %}
+{% block title %}K-Means | Evaluation Metrics{% endblock %}
+{% block content %}
+<main class="page-shell linear-page"><section class="content-panel linear-panel">
+    <p class="eyebrow"><span></span>Activity 3 | Model Evaluation</p>
+    <h1>K-Means <em>Evaluation</em></h1><div class="title-line"></div>
+    <p class="lead">A compact view of cluster separation and group sizes for the social media digital behavior dataset.</p>
+    <div class="model-grid metrics-summary">
+        <div><span>Dataset Records</span><strong>{{ record_count }}</strong></div>
+        <div><span>Number of Clusters</span><strong>{{ cluster_summary|length }}</strong></div>
+        <div><span>Silhouette Score</span><strong>{{ '%.4f'|format(silhouette) }}</strong></div>
+    </div>
+    <section class="two-column-text">
+        <article class="detail-card"><h2>Silhouette Score</h2><p>The silhouette score ranges from -1 to 1. {{ silhouette_interpretation }} This score is not classification accuracy.</p></article>
+        <article class="detail-card"><h2>Model Configuration</h2><p>Five numeric features are standardized with StandardScaler and clustered with K-Means. The model uses three clusters, random_state 42, n_init 10, and max_iter 300. No target labels or train-test split are used.</p></article>
+    </section>
+    <section class="dataset-section"><div class="dataset-head"><h2>Cluster Distribution</h2><p>Membership count in the fitted model.</p></div>
+        <div class="cluster-count-grid">{% for cluster_id, count in cluster_summary.items() %}<article><span>Cluster {{ cluster_id }}</span><strong>{{ count }}</strong><small>{{ '%.1f'|format(count / record_count * 100) }}% of records</small></article>{% endfor %}</div>
+    </section>
+    <section class="dataset-section"><div class="dataset-head"><h2>Cluster Interpretation</h2><p>Centroid values are reported in the application table.</p></div><div class="cluster-profile-list">
+        {% for profile in profiles %}<article class="cluster-profile"><div><strong>Cluster {{ profile.cluster }}</strong><span>{{ profile.count }} records</span></div><h3>{{ profile.interpretation }}</h3><p>{{ profile.summary }}</p></article>{% endfor %}
+    </div></section>
+    <div class="hero-actions page-actions"><a class="button button-primary" href="{{ url_for('unsupervised_application') }}">View Clustering Application <span>&rarr;</span></a><a class="button button-secondary" href="{{ url_for('unsupervised_manual') }}">Review Manual Exercise <span>&rarr;</span></a></div>
+</section></main>
+{% endblock %}

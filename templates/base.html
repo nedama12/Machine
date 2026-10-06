@@ -80,6 +80,7 @@
                 <button
                     class="nav-group-toggle"
                     type="button"
+                    aria-expanded="false"
                 >
                     Supervised Learning
                     <span>+</span>
@@ -151,6 +152,16 @@
 
                 </div>
 
+            </div>
+
+            <div class="nav-group nav-group-unsupervised {{ 'active-group' if request.endpoint in ['unsupervised_concepts', 'unsupervised_manual', 'unsupervised_application', 'unsupervised_metrics'] else '' }}">
+                <button class="nav-group-toggle" type="button" aria-expanded="false">Unsupervised Learning <span>+</span></button>
+                <div class="nav-menu">
+                    <span>K-Means Clustering</span>
+                    <a class="{{ 'active' if request.endpoint == 'unsupervised_concepts' else '' }}" href="{{ url_for('unsupervised_concepts') }}">Concepts</a>
+                    <a class="{{ 'active' if request.endpoint == 'unsupervised_manual' else '' }}" href="{{ url_for('unsupervised_manual') }}">Manual Exercise</a>
+                    <a class="{{ 'active' if request.endpoint == 'unsupervised_application' else '' }}" href="{{ url_for('unsupervised_application') }}">Application</a>
+                </div>
             </div>
 
             <div
@@ -279,6 +290,14 @@
                 });
 
             }
+
+            document.querySelectorAll('.nav-group-toggle').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    var group = button.closest('.nav-group');
+                    var open = group.classList.toggle('open');
+                    button.setAttribute('aria-expanded', open ? 'true' : 'false');
+                });
+            });
 
         })();
 

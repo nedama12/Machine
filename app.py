@@ -1,3 +1,6 @@
+import math
+from pathlib import Path
+
 from flask import Flask, render_template, request
 
 from LinearRegressionGrades import df, model, predict_energy
@@ -17,8 +20,25 @@ from extra_trees_metrics import (
     recall as risk_recall,
     f1 as risk_f1
 )
+from kmeans_clustering import (
+    df as social_df,
+    df_results as social_results_df,
+    feature_columns,
+    predict_cluster,
+)
+from kmeans_visualization import create_kmeans_graph
+from kmeans_metrics import (
+    MANUAL_EXERCISE,
+    get_cluster_distribution,
+    get_cluster_profiles,
+    get_silhouette_interpretation,
+    get_silhouette_score,
+)
 
 app = Flask(__name__)
+
+# Build the static visualization from the current K-Means results.
+create_kmeans_graph()
 
 
 @app.route("/")
@@ -210,6 +230,134 @@ def extra_trees_metrics():
         precision=risk_precision,
         recall=risk_recall,
         f1=risk_f1
+    )
+
+@app.route("/unsupervised/concepts")
+def unsupervised_concepts():
+    return render_template("unsupervised_concepts.html")
+
+
+@app.route("/unsupervised/manual")
+def unsupervised_manual():
+    image_names = [
+        "kmeans_initial.png",
+        "kmeans_iteration_1.png",
+        "kmeans_iteration_2.png",
+        "kmeans_iteration_3.png",
+    ]
+    available_images = [
+        image for image in image_names
+        if (Path(app.static_folder) / image).is_file()
+    ]
+    return render_template(
+        "kmeans_manual.html",
+        exercise=MANUAL_EXERCISE,
+        images=available_images,
+    )
+
+
+@app.route("/unsupervised/application", methods=["GET", "POST"])
+def unsupervised_application():
+    error = None
+    prediction = None
+    input_columns = [
+        ("age", "Age"),
+        ("social_hours", "Daily_Social_Media_Hours"),
+        ("screen_hours", "Daily_Screen_Time_Hours"),
+        ("posts", "Posts_Per_Week"),
+        ("messages", "Messages_Per_Day"),
+    ]
+    form_values = {
+        name: "" for name, _ in input_columns
+    }
+    bounds = {}
+    for name, column in input_columns:
+        bounds[name] = (
+            float(social_df[column].min()),
+            float(social_df[column].max()),
+        )
+    range_description = (
+        f"Age {bounds['age'][0]:g} to {bounds['age'][1]:g}, "
+        f"social media hours {bounds['social_hours'][0]:g} to {bounds['social_hours'][1]:g}, "
+        f"screen time {bounds['screen_hours'][0]:g} to {bounds['screen_hours'][1]:g}, "
+        f"posts per week {bounds['posts'][0]:g} to {bounds['posts'][1]:g}, "
+        f"and messages per day {bounds['messages'][0]:g} to {bounds['messages'][1]:g}."
+    )
+    page_size = 50
+    try:
+        records_page = max(1, int(request.args.get("page", "1")))
+    except ValueError:
+        records_page = 1
+    page_count = math.ceil(len(social_results_df) / page_size)
+    records_page = min(records_page, page_count)
+    start = (records_page - 1) * page_size
+    record_frame = social_results_df.iloc[start:start + page_size]
+    clustered_records = [
+        {
+            "record": int(index) + 1,
+            "age": row["Age"],
+            "social_hours": row["Daily_Social_Media_Hours"],
+            "screen_hours": row["Daily_Screen_Time_Hours"],
+            "posts": row["Posts_Per_Week"],
+            "messages": row["Messages_Per_Day"],
+            "cluster": int(row["Cluster"]),
+        }
+        for index, row in record_frame.iterrows()
+    ]
+
+    if request.method == "POST":
+        form_values = {key: request.form.get(key, "").strip() for key in form_values}
+        try:
+            values = {}
+            for key, _ in input_columns:
+                value = float(form_values[key])
+                if not math.isfinite(value):
+                    raise ValueError
+                minimum, maximum = bounds[key]
+                if not minimum <= value <= maximum:
+                    raise ValueError
+                values[key] = value
+
+            if any(values[key] != int(values[key]) for key in ("age", "posts", "messages")):
+                raise ValueError
+
+            prediction = predict_cluster(
+                values["age"],
+                values["social_hours"],
+                values["screen_hours"],
+                values["posts"],
+                values["messages"],
+            )
+        except (TypeError, ValueError):
+            error = (
+                "Enter valid values within the dataset ranges: "
+                f"{range_description} Age, posts, and messages must be whole numbers."
+            )
+
+    return render_template(
+        "kmeans_application.html",
+        error=error,
+        prediction=prediction,
+        form_values=form_values,
+        record_count=len(social_df),
+        feature_count=len(feature_columns),
+        profiles=get_cluster_profiles(),
+        bounds=bounds,
+        silhouette=get_silhouette_score(),
+        clustered_records=clustered_records,
+        records_page=records_page,
+        page_count=page_count,
+        records_total=len(social_results_df),
+    )
+
+
+@app.route("/unsupervised/metrics")
+def unsupervised_metrics():
+    return render_template(
+        "kmeans_metrics.html", record_count=len(social_df),
+        silhouette=get_silhouette_score(), cluster_summary=get_cluster_distribution(),
+        profiles=get_cluster_profiles(),
+        silhouette_interpretation=get_silhouette_interpretation(),
     )
 
 if __name__ == "__main__":
