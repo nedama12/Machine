@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% block title %}Reinforcement Learning Application{% endblock %}
+{% block content %}
+<main class="page-shell linear-page"><section class="content-panel linear-panel">
+
+<p class="eyebrow"><span></span>Reinforcement Learning &middot; Application</p>
+<h1>Grid World <em>Q-Learning</em></h1>
+<div class="title-line"></div>
+<p class="lead">An agent starts in cell A and must reach the target T on a {{ rows }}&times;{{ cols }} grid. It learns by trial and error, using an Epsilon-Greedy strategy and a Q-value model trained incrementally with SGDRegressor. The route shown after training is not programmed: it comes from the learned Q-values.</p>
+
+<h2 class="mt-5">Environment</h2>
+<div class="rl-legend">
+    <span class="rl-legend-item"><b class="rl-swatch rl-start">A</b> Agent start ({{ counts['A'] }})</span>
+    <span class="rl-legend-item"><b class="rl-swatch rl-goal">T</b> Target ({{ counts['T'] }})</span>
+    <span class="rl-legend-item"><b class="rl-swatch rl-free">o</b> Available path ({{ counts['o'] }})</span>
+    <span class="rl-legend-item"><b class="rl-swatch rl-wall">#</b> Wall ({{ counts['#'] }})</span>
+    <span class="rl-legend-item"><b class="rl-swatch rl-danger">D</b> Danger Zone ({{ counts['D'] }})</span>
+    <span class="rl-legend-item"><b class="rl-swatch rl-free rl-on-path">&nbsp;</b> Learned path</span>
+</div>
+
+<div class="rl-grid-wrap">
+    <div class="rl-grid" style="--rl-cols: {{ cols }}">
+        {% for row in grid %}{% for cell in row %}
+        <div class="rl-cell {{ {'A': 'rl-start', 'T': 'rl-goal', 'o': 'rl-free', '#': 'rl-wall', 'D': 'rl-danger'}[cell.char] }} {{ 'rl-on-path' if cell.on_path else '' }}">{{ cell.char }}{% if cell.order is not none and cell.char in ['o', 'D'] %}<small>{{ cell.order }}</small>{% endif %}</div>
+        {% endfor %}{% endfor %}
+    </div>
+</div>
+{% if session %}
+<div class="alert alert-success rl-alert" role="alert">
+    <i class="bi bi-check-circle-fill me-2"></i>Highlighted cells (teal outline) are the path followed by the trained agent without exploration; the small number is the step at which each cell is reached. Original characters are kept.
+</div>
+{% endif %}
+
+<h2 class="mt-5">Reward system</h2>
+<div class="table-responsive">
+<table class="table table-dark table-striped align-middle">
+    <thead><tr><th>Situation</th><th>Cell type</th><th>Reward</th></tr></thead>
+    <tbody>
+    {% for situation, cell, value in rewards %}
+        <tr><td>{{ situation }}</td><td>{{ cell }}</td><td>{{ value }}</td></tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+<p class="prediction-help">A small cost per step pushes the agent to find short routes, walls cost more than a plain step so bumping is never useful, a Danger Zone costs enough that a detour of a few cells is better than crossing it, and the large goal reward gives every route a reason to end at T. The agent can enter D, but pays for it. Episodes end at T or after {{ config.max_steps_training }} steps.</p>
+
+<h2 class="mt-5">Training configuration</h2>
+<div class="model-grid">
+    <div><span>Training episodes</span><strong>{{ config.episodes }}</strong></div>
+    <div><span>Initial epsilon (&epsilon;)</span><strong>{{ config.epsilon_start }}</strong></div>
+    <div><span>Minimum epsilon</span><strong>{{ config.epsilon_min }}</strong></div>
+    <div><span>Epsilon decay</span><strong>{{ config.epsilon_decay }}</strong></div>
+    <div><span>Discount factor (&gamma;)</span><strong>{{ config.gamma }}</strong></div>
+    <div><span>Learning rate (SGD eta0)</span><strong>{{ config.learning_rate }}</strong></div>
+    <div><span>Replay batch size</span><strong>{{ config.batch_size }}</strong></div>
+    <div><span>Max steps per episode</span><strong>{{ config.max_steps_training }}</strong></div>
+    <div><span>Random seed</span><strong>{{ config.seed }}</strong></div>
+</div>
+<div class="accordion mt-3 rl-accordion" id="rlParams">
+    <div class="accordion-item">
+        <h2 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#rlWhy">Why these values?</button></h2>
+        <div id="rlWhy" class="accordion-collapse collapse" data-bs-parent="#rlParams"><div class="accordion-body">
+            <ul class="mb-0">
+                <li><strong>&epsilon; = {{ config.epsilon_start }} &rarr; {{ config.epsilon_min }}, decay {{ config.epsilon_decay }}:</strong> the agent explores almost purely at the start; after about 500 episodes it is near the floor, so the remaining episodes refine the route while 5% of moves still explore.</li>
+                <li><strong>&gamma; = {{ config.gamma }}:</strong> far-sighted enough for the target reward to reach the start cell (18 moves away), without making distant rewards count as much as immediate ones.</li>
+                <li><strong>{{ config.episodes }} episodes:</strong> enough for the Q-values to propagate across the whole grid while keeping the training button fast.</li>
+                <li><strong>Learning rate {{ config.learning_rate }} and batches of {{ config.batch_size }}:</strong> small, stable corrections taken from replayed experiences instead of a single step.</li>
+                <li><strong>Seed {{ config.seed }}:</strong> makes the run reproducible.</li>
+            </ul>
+        </div></div>
+    </div>
+</div>
+
+<form method="post" class="mt-4">
+    <button class="button button-primary" type="submit">Train Agent <span>&rarr;</span></button>
+    <p class="prediction-help mt-3 mb-0">Training runs on the server when the button is pressed and takes a few seconds.</p>
+</form>
+
+{% if session %}
+{% set s = session.stats %}{% set e = session.evaluation %}
+
+<h2 class="mt-5">Training results</h2>
+<div class="model-grid metrics-summary">
+    <div><span>Total episodes</span><strong>{{ s.episodes }}</strong></div>
+    <div><span>Successful episodes</span><strong>{{ s.successes }}</strong></div>
+    <div><span>Success percentage</span><strong>{{ '%.2f'|format(s.success_rate) }}%</strong></div>
+    <div><span>Average reward</span><strong>{{ '%.2f'|format(s.average_reward) }}</strong></div>
+    <div><span>Final epsilon</span><strong>{{ '%.4f'|format(s.final_epsilon) }}</strong></div>
+    <div><span>Movements in final evaluation</span><strong>{{ e.movements }}</strong></div>
+    <div><span>Total reward in final evaluation</span><strong>{{ e.total_reward }}</strong></div>
+    <div><span>Danger Zones entered</span><strong>{{ e.danger_hits }}</strong></div>
+    <div><span>Goal reached</span><strong>{{ 'Yes' if e.reached else 'No' }}</strong></div>
+</div>
+<div class="alert {{ 'alert-success' if e.reached else 'alert-danger' }} rl-alert" role="alert">
+    {% if e.reached %}<i class="bi bi-flag-fill me-2"></i>The trained agent reached the target in {{ e.movements }} movements{% if e.danger_hits == 0 %} without entering any Danger Zone{% else %} entering {{ e.danger_hits }} Danger Zone(s){% endif %}.
+    {% else %}<i class="bi bi-x-octagon-fill me-2"></i>The trained agent did not reach the target within {{ config.max_steps_evaluation }} steps.{% endif %}
+</div>
+<p class="prediction-help"><strong>Final path:</strong>
+    {% for r, c in e.path %}({{ r }},{{ c }}){{ ' &rarr; '|safe if not loop.last else '' }}{% endfor %}
+</p>
+
+<h2 class="mt-5">Step-by-step evaluation (no exploration)</h2>
+<div class="table-responsive rl-scroll">
+<table class="table table-dark table-striped align-middle">
+    <thead><tr><th>Step</th><th>State</th><th>Action</th><th>Next State</th><th>Cell Type</th><th>Reward</th></tr></thead>
+    <tbody>
+    {% for row in e.rows %}
+        <tr>
+            <td>{{ row.step }}</td>
+            <td>({{ row.state[0] }},{{ row.state[1] }})</td>
+            <td>{{ row.action }}</td>
+            <td>({{ row.next_state[0] }},{{ row.next_state[1] }})</td>
+            <td>{{ row.cell }}</td>
+            <td>{{ row.reward }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+
+<h2 class="mt-5">Learned Q-values</h2>
+<p class="prediction-help">Q(s,a) predicted by the trained model for every non-wall cell. The best action in each state (highlighted) is the one the agent chooses when it exploits.</p>
+<div class="table-responsive rl-scroll">
+<table class="table table-dark table-striped align-middle">
+    <thead><tr><th>State</th><th>Cell</th>{% for a in actions %}<th>{{ a }}</th>{% endfor %}<th>Best action</th></tr></thead>
+    <tbody>
+    {% for row in session.q_table %}
+        <tr>
+            <td>({{ row.state[0] }},{{ row.state[1] }})</td>
+            <td>{{ row.cell }}</td>
+            {% for a in actions %}<td class="{{ 'rl-best' if a == row.best else '' }}">{{ '%.2f'|format(row['values'][loop.index0]) }}</td>{% endfor %}
+            <td>{{ row.best }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endif %}
+
+<div class="d-flex flex-wrap gap-2 mt-5">
+    <a class="button button-secondary" href="{{ url_for('reinforcement_learning_concepts') }}">RL Concepts <span>&rarr;</span></a>
+    <a class="button button-secondary back-button" href="{{ url_for('home') }}"><span>&larr;</span> Back to Home</a>
+</div>
+
+</section></main>
+{% endblock %}
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

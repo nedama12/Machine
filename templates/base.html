@@ -13,6 +13,11 @@
     >
 
     <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+        rel="stylesheet"
+    >
+
+    <link
         rel="stylesheet"
         href="{{ url_for('static', filename='css/style.css') }}"
     >
@@ -164,6 +169,15 @@
                 </div>
             </div>
 
+            <div class="nav-group {{ 'active-group' if request.endpoint in ['reinforcement_learning_concepts', 'reinforcement_learning_application'] else '' }}">
+                <button class="nav-group-toggle" type="button" aria-expanded="false">Reinforcement Learning <span>+</span></button>
+                <div class="nav-menu">
+                    <span>Grid World Q-Learning</span>
+                    <a class="{{ 'active' if request.endpoint == 'reinforcement_learning_concepts' else '' }}" href="{{ url_for('reinforcement_learning_concepts') }}">Concepts</a>
+                    <a class="{{ 'active' if request.endpoint == 'reinforcement_learning_application' else '' }}" href="{{ url_for('reinforcement_learning_application') }}">Application</a>
+                </div>
+            </div>
+
             <div
                 class="nav-dropdown {{ 'active' if request.endpoint in (
                     'use_case_1',
@@ -302,6 +316,8 @@
         })();
 
     </script>
+
+    {% block scripts %}{% endblock %}
 
 </body>
 </html>

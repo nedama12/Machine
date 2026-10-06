@@ -34,6 +34,25 @@ from kmeans_metrics import (
     get_silhouette_interpretation,
     get_silhouette_score,
 )
+from qlearning_gridworld import (
+    ACTIONS,
+    BATCH_SIZE,
+    EPISODES,
+    EPSILON_DECAY,
+    EPSILON_MIN,
+    EPSILON_START,
+    GAMMA,
+    GRID_COLS,
+    GRID_ROWS,
+    LEARNING_RATE,
+    MAX_STEPS_EVALUATION,
+    MAX_STEPS_TRAINING,
+    REWARD_TABLE,
+    SEED,
+    build_grid,
+    cell_counts,
+    run_session,
+)
 
 app = Flask(__name__)
 
@@ -359,6 +378,54 @@ def unsupervised_metrics():
         profiles=get_cluster_profiles(),
         silhouette_interpretation=get_silhouette_interpretation(),
     )
+
+
+@app.route("/reinforcement-learning/concepts")
+def reinforcement_learning_concepts():
+    return render_template(
+        "reinforcement_learning_concepts.html",
+        rows=GRID_ROWS,
+        cols=GRID_COLS,
+        rewards=REWARD_TABLE,
+        gamma=GAMMA,
+        epsilon_start=EPSILON_START,
+        epsilon_min=EPSILON_MIN,
+        epsilon_decay=EPSILON_DECAY,
+    )
+
+
+@app.route("/reinforcement-learning/application", methods=["GET", "POST"])
+def reinforcement_learning_application():
+    session = None
+    path = None
+
+    if request.method == "POST":
+        session = run_session()
+        path = session["evaluation"]["path"]
+
+    return render_template(
+        "reinforcement_learning_application.html",
+        grid=build_grid(path),
+        counts=cell_counts(),
+        rows=GRID_ROWS,
+        cols=GRID_COLS,
+        actions=ACTIONS,
+        rewards=REWARD_TABLE,
+        config={
+            "episodes": EPISODES,
+            "gamma": GAMMA,
+            "epsilon_start": EPSILON_START,
+            "epsilon_min": EPSILON_MIN,
+            "epsilon_decay": EPSILON_DECAY,
+            "learning_rate": LEARNING_RATE,
+            "batch_size": BATCH_SIZE,
+            "max_steps_training": MAX_STEPS_TRAINING,
+            "max_steps_evaluation": MAX_STEPS_EVALUATION,
+            "seed": SEED,
+        },
+        session=session,
+    )
+
 
 if __name__ == "__main__":
     app.run(debug=True)
